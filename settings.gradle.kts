@@ -1,1 +1,1 @@
-rootProject.name = "emwhyware-assertion"
+rootProject.name = "emw-assertion"

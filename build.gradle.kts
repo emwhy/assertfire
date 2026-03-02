@@ -3,7 +3,7 @@ plugins {
     id("org.checkerframework").version("0.6.61")
 }
 
-group = "emwhyware-assertion"
+group = "emw-assertion"
 version = "1.0-SNAPSHOT"
 
 repositories {
