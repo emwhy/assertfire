@@ -14,101 +14,110 @@ public class AssertionTest implements Assertor {
         final String nullString = null;
         
         expect("Test 1", "test").to.startWith("te");
-        expect("Test 2", "test").ignoringCase.to.startWith("TES");
-        expect("Test 3", "test").not.to.startWith("es");
-        expect("Test 4", "test").ignoringCase.not.to.startWith("ES");
+        expect("Test 2", "test").to.caseInsensitively.startWith("TES");
+        expect("Test 3", "test").to.not.startWith("es");
+        expect("Test 4", "test").to.caseInsensitively.not.startWith("ES");
 
         expect("Test 5", "test").to.endWith("st");
-        expect("Test 6", "test").ignoringCase.to.endWith("ST");
-        expect("Test 7", "test").not.to.endWith("es");
-        expect("Test 8", "test").ignoringCase.not.to.endWith("ES");
+        expect("Test 6", "test").to.caseInsensitively.endWith("ST");
+        expect("Test 7", "test").to.not.endWith("es");
+        expect("Test 8", "test").to.caseInsensitively.not.endWith("ES");
 
-        expect("Test 9", "test").to.equal("test");
-        expect("Test 10", "test").ignoringCase.to.equal("TEST");
-        expect("Test 11", "test").not.to.equal("es");
-        expect("Test 12", "test").ignoringCase.not.to.equal("ES");
+        expect("Test 9", "test").to.be("test");
+        expect("Test 10", "test").to.caseInsensitively.be("TEST");
+        expect("Test 11", "test").to.not.be("es");
+        expect("Test 12", "test").to.caseInsensitively.not.be("ES");
 
         expect("Test 13", "test").to.contain("es");
-        expect("Test 14", "test").ignoringCase.to.contain("ES");
-        expect("Test 15", "test").not.to.contain("estt");
-        expect("Test 16", "test").ignoringCase.not.to.contain("ESTT");
+        expect("Test 14", "test").to.caseInsensitively.contain("ES");
+        expect("Test 15", "test").to.not.contain("estt");
+        expect("Test 16", "test").to.caseInsensitively.not.contain("ESTT");
 
         expect("Test 17", "test").to.match("\\w+");
-        expect("Test 18", "test").not.to.match("\\d+");
+        expect("Test 18", "test").to.not.match("\\d+");
 
-        expect("Test 19", "test").to.beOneOf("test", "test2", "test3");
-        expect("Test 20", "test").ignoringCase.to.beOneOf("TEST", "TEST2",  "TEST3");
-        expect("Test 21", "test").not.to.beOneOf("TEST", "TEST2", "TEST3");
-        expect("Test 22", "test").ignoringCase.not.to.beOneOf("TEST1", "TEST2", "TEST3");
+        expect("Test 19", "test").to.be.oneOf("test", "test2", "test3");
+        expect("Test 20", "test").to.caseInsensitively.be.oneOf("TEST", "TEST2",  "TEST3");
+        expect("Test 21", "test").to.not.be.oneOf("TEST", "TEST2", "TEST3");
+        expect("Test 22", "test").to.caseInsensitively.not.be.oneOf("TEST1", "TEST2", "TEST3");
 
-        expect("Test 23", "").to.beEmpty();
-        expect("Test 24", "test").not.to.beEmpty();
-        expect("Test 25", nullString).to.beNull();
-        expect("Test 26", "null").not.to.beNull();
+        expect("Test 23", "").to.be.empty();
+        expect("Test 24", "test").to.not.be.empty();
+        expect("Test 25", nullString).to.be.nullValue();
+        expect("Test 26", "null").to.not.be.nullValue();
 
         expectError(() -> expect("Test 27", "test").to.startWith("es"));
 
         // startWith Failures
-        expectError(() -> expect("Test 28", "test").ignoringCase.to.startWith("abc"));
-        expectError(() -> expect("Test 29", "test").not.to.startWith("te"));
-        expectError(() -> expect("Test 30", "test").ignoringCase.not.to.startWith("TE"));
+        expectError(() -> expect("Test 28", "test").to.caseInsensitively.startWith("abc"));
+        expectError(() -> expect("Test 29", "test").to.not.startWith("te"));
+        expectError(() -> expect("Test 30", "test").to.caseInsensitively.not.startWith("TE"));
 
         // endWith Failures
         expectError(() -> expect("Test 31", "test").to.endWith("te"));
-        expectError(() -> expect("Test 32", "test").ignoringCase.to.endWith("ABC"));
-        expectError(() -> expect("Test 33", "test").not.to.endWith("st"));
-        expectError(() -> expect("Test 34", "test").ignoringCase.not.to.endWith("ST"));
+        expectError(() -> expect("Test 32", "test").to.caseInsensitively.endWith("ABC"));
+        expectError(() -> expect("Test 33", "test").to.not.endWith("st"));
+        expectError(() -> expect("Test 34", "test").to.caseInsensitively.not.endWith("ST"));
 
         // equal Failures
-        expectError(() -> expect("Test 35", "test").to.equal("TEST"));
-        expectError(() -> expect("Test 36", "test").ignoringCase.to.equal("abc"));
-        expectError(() -> expect("Test 37", "test").not.to.equal("test"));
-        expectError(() -> expect("Test 38", "test").ignoringCase.not.to.equal("TEST"));
+        expectError(() -> expect("Test 35", "test").to.be("TEST"));
+        expectError(() -> expect("Test 36", "test").to.caseInsensitively.be("abc"));
+        expectError(() -> expect("Test 37", "test").to.not.be("test"));
+        expectError(() -> expect("Test 38", "test").to.caseInsensitively.not.be("TEST"));
 
         // contain Failures
         expectError(() -> expect("Test 39", "test").to.contain("abc"));
-        expectError(() -> expect("Test 40", "test").ignoringCase.to.contain("ABC"));
-        expectError(() -> expect("Test 41", "test").not.to.contain("es"));
-        expectError(() -> expect("Test 42", "test").ignoringCase.not.to.contain("ES"));
+        expectError(() -> expect("Test 40", "test").to.caseInsensitively.contain("ABC"));
+        expectError(() -> expect("Test 41", "test").to.not.contain("es"));
+        expectError(() -> expect("Test 42", "test").to.caseInsensitively.not.contain("ES"));
 
         // match (Regex) Failures
         expectError(() -> expect("Test 43", "test").to.match("\\d+"));
-        expectError(() -> expect("Test 44", "test").not.to.match(".*st"));
+        expectError(() -> expect("Test 44", "test").to.not.match(".*st"));
 
         // beOneOf Failures
-        expectError(() -> expect("Test 45", "test").to.beOneOf("abc", "123"));
-        expectError(() -> expect("Test 46", "test").ignoringCase.to.beOneOf("ABC", "123"));
-        expectError(() -> expect("Test 47", "test").not.to.beOneOf("test", "other"));
-        expectError(() -> expect("Test 48", "test").ignoringCase.not.to.beOneOf("TEST", "other"));
+        expectError(() -> expect("Test 45", "test").to.be.oneOf("abc", "123"));
+        expectError(() -> expect("Test 46", "test").to.caseInsensitively.be.oneOf("ABC", "123"));
+        expectError(() -> expect("Test 47", "test").to.not.be.oneOf("test", "other"));
+        expectError(() -> expect("Test 48", "test").to.caseInsensitively.not.be.oneOf("TEST", "other"));
 
         // beEmpty Failures
-        expectError(() -> expect("Test 49", "test").to.beEmpty());
-        expectError(() -> expect("Test 50", "").not.to.beEmpty());
+        expectError(() -> expect("Test 49", "test").to.be.empty());
+        expectError(() -> expect("Test 50", "").to.not.be.empty());
 
         // beNull Failures
-        expectError(() -> expect("Test 51", "test").to.beNull());
-        expectError(() -> expect("Test 52", nullString).not.to.beNull());
+        expectError(() -> expect("Test 51", "test").to.be.nullValue());
+        expectError(() -> expect("Test 52", nullString).to.not.be.nullValue());
 
         // Blank/Whitespace checks (if applicable in your class)
-        expectError(() -> expect("Test 53", "   ").to.beEmpty());
+        expectError(() -> expect("Test 53", "   ").to.be.empty());
     }
 
     @Test
     public void testCollection() {
-        expect("Test 1", new String[] { "test1", "test2" }).to.beSameAs(new String[] { "test1", "test2" });
-        expect("Test 2", new String[] { "test1", "test2" }).to.beSameInAnyOrderAs(new String[] { "test2", "test1" });
-        expect("Test 3", new String[] { "test1", "test2" }).to.have("test2", "test1");
-        expect("Test 4", new String[] { "test1", "test2" }).ignoringCase.to.beSameAs(new String[] { "Test1", "test2" });
-        expect("Test 5", new String[] { "test1", "test2" }).ignoringCase.to.beSameInAnyOrderAs(new String[] { "Test2", "test1" });
-        expect("Test 6", new String[] { "test1", "test2" }).ignoringCase.to.have("Test2");
-        expect("Test 7", new String[] { "test1", "test2" }).to.haveSizeOf(2);
+        final String[] emptyArray = new String[0];
+        final String[] nullArray = null;
 
-        expectError(() -> expect("Test 8", new String[] { "test1", "test2" }).to.beSameAs(new String[] { "Test1", "test2" }));
-        expectError(() -> expect("Test 9", new String[] { "test1", "test2" }).not.to.beSameAs(new String[] { "test1", "test2" }));
-        expectError(() -> expect("Test 10", new String[] { "test1", "test2" }).to.beSameInAnyOrderAs(new String[] { "Test2", "test1" }));
-        expectError(() -> expect("Test 11", new String[] { "test1", "test2" }).to.have("Test2"));
-        expectError(() -> expect("Test 12", new String[] { "test1", "test2" }).to.have("test1", "test2", "test3"));
-        expectError(() -> expect("Test 13", new String[] { "test1", "test2" }).to.haveSizeOf(1));
+        expect("Test 1", new String[] { "test1", "test2" }).to.be(new String[] { "test1", "test2" });
+        expect("Test 2", new String[] { "test1", "test2" }).to.inAnyOrder.be(new String[] { "test2", "test1" });
+        expect("Test 3", new String[] { "test1", "test2" }).to.have("test2", "test1");
+        expect("Test 4", new String[] { "test1", "test2" }).to.caseInsensitively.be(new String[] { "Test1", "test2" });
+        expect("Test 5", new String[] { "test1", "test2" }).to.caseInsensitively.inAnyOrder.be(new String[] { "Test2", "test1" });
+        expect("Test 6", new String[] { "test1", "test2" }).to.caseInsensitively.have("Test2");
+        expect("Test 7", new String[] { "test1", "test2" }).to.haveSizeOf(2);
+        expect("Test 8", emptyArray).to.be.empty();
+        expect("Test 9", nullArray).to.be.nullValue();
+        expect("Test 10", new String[] { "test1", "test2" }).to.not.be.empty();
+        expect("Test 11", emptyArray).to.not.be.nullValue();
+
+        expectError(() -> expect("Test 12", new String[] { "test1", "test2" }).to.be(new String[] { "Test1", "test2" }));
+        expectError(() -> expect("Test 13", new String[] { "test1", "test2" }).to.not.be(new String[] { "test1", "test2" }));
+        expectError(() -> expect("Test 14", new String[] { "test1", "test2" }).to.inAnyOrder.be(new String[] { "Test2", "test1" }));
+        expectError(() -> expect("Test 15", new String[] { "test1", "test2" }).to.have("Test2"));
+        expectError(() -> expect("Test 16", new String[] { "test1", "test2" }).to.have("test1", "test2", "test3"));
+        expectError(() -> expect("Test 17", new String[] { "test1", "test2" }).to.haveSizeOf(1));
+        expectError(() -> expect("Test 18", new String[] { "test1", "test2" }).to.be.empty());
+        expectError(() -> expect("Test 19", new String[] { "test1", "test2" }).to.be.nullValue());
     }
 
     @Test
@@ -188,8 +197,8 @@ public class AssertionTest implements Assertor {
     public void testGroup() {
         try {
             AssertionGroup.group(g -> {
-                g.expect("test").to.equal("test1");
-                g.expect("test").to.equal("test2");
+                g.expect("test").to.be("test1");
+                g.expect("test").to.be("test2");
                 g.expect(1).to.equal(1);
                 g.expect(1).to.equal(0);
             });

@@ -5,20 +5,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emwhyware.assertion.AssertionGroup;
 import org.emwhyware.assertion.Conditions;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public final class StringConditions extends Conditions {
+public class StringConditions extends Conditions {
+    public final StringBeConditions be;
+
     private final String actual;
 
     StringConditions(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable String actual, boolean negated, boolean ignoreCase) {
         super(group, labelForActual, negated, ignoreCase);
         this.actual = actual;
+        this.be = new StringBeConditions(group, labelForActual, actual, negated, ignoreCase);
     }
 
-    public void equal(@NonNull String expected) {
+    public void be(@NonNull String expected) {
         assertCondition(partialAssertionErrorMessage() + "to equal '" + expected + "'.", () -> {
             final String testedActual = ignoreCase ? Optional.ofNullable(actual).orElse("").toLowerCase() : Optional.ofNullable(actual).orElse("");
             final String testedExpected = ignoreCase ? expected.toLowerCase() : expected;
@@ -62,31 +63,6 @@ public final class StringConditions extends Conditions {
 
         assertCondition(partialAssertionErrorMessage() + "to match the pattern '" + regex + "'.", () -> {
             return actual != null && negated != pattern.matcher(actual).matches();
-        });
-    }
-
-    public void beOneOf(String... expectedTexts) {
-        this.beOneOf(Arrays.asList(expectedTexts));
-    }
-
-    public void beOneOf(Collection<String> expectedTexts) {
-        assertCondition(partialAssertionErrorMessage() + "to be one of '" + String.join("', '", expectedTexts) + "'.", () -> {
-            final String testedActual = ignoreCase ? Optional.ofNullable(actual).orElse("").toLowerCase() : Optional.ofNullable(actual).orElse("");
-            final Collection<String> testedExpectedTexts = ignoreCase ? expectedTexts.stream().map(String::toLowerCase).toList() : expectedTexts;
-
-            return (actual != null && testedExpectedTexts.contains(testedActual)) != negated;
-        });
-    }
-
-    public void beEmpty() {
-        assertCondition(partialAssertionErrorMessage() + "to be empty.", () -> {
-            return actual != null && negated != actual.isEmpty();
-        });
-    }
-
-    public void beNull() {
-        assertCondition(partialAssertionErrorMessage() + "to be null.", () -> {
-            return negated != (actual == null);
         });
     }
 

@@ -11,11 +11,11 @@ public final class StringAssertionGroup {
         this.group = group;
     }
 
-    public StringIgnoringCaseOrTo expect(@Nullable String actual) {
+    public StringTo expect(@Nullable String actual) {
         return expect("", actual);
     }
 
-    public StringIgnoringCaseOrTo expect(@NonNull String labelForActual, @Nullable String actual) {
-        return new StringIgnoringCaseOrTo(group, labelForActual, actual, false, false);
+    public StringTo expect(@NonNull String labelForActual, @Nullable String actual) {
+        return new StringTo(group, labelForActual, actual, false, false);
     }
 }

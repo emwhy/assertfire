@@ -9,62 +9,75 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public final class CollectionConditions extends Conditions {
-    private final Collection<?> actualCollection;
+public class CollectionConditions extends Conditions {
+    public final CollectionBeConditions be;
 
-    CollectionConditions(@Nullable AssertionGroup group, @NonNull String labelForActual, @NonNull Collection<?> actual, boolean negated, boolean ignoreCase) {
+    private final Collection<?> actualCollection;
+    private final boolean anyOrder;
+
+    CollectionConditions(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Collection<?> actual, boolean negated, boolean ignoreCase, boolean anyOrder) {
         super(group, labelForActual, negated, ignoreCase);
         this.actualCollection = actual;
+        this.anyOrder = anyOrder;
+        this.be = new CollectionBeConditions(group, labelForActual, actual, negated, ignoreCase, anyOrder);
     }
 
-    public void beSameAs(Object[] expected) {
-        this.beSameAs(Arrays.asList(expected));
+
+    public void be(Object[] expected) {
+        this.be(Arrays.asList(expected));
     }
 
-    public void beSameAs(Collection<?> expectedCollection) {
-        assertCondition(partialAssertionErrorMessage() + "to be same as " + join(expectedCollection) + ".", () -> {
-            final List<String> testActualList = ignoreCase ? actualCollection.stream().map(o -> o.toString().toLowerCase()).toList() : actualCollection.stream().map(Object::toString).toList();
-            final List<String> testedExpectedList = ignoreCase ? expectedCollection.stream().map(o -> o.toString().toLowerCase()).toList() : expectedCollection.stream().map(Object::toString).toList();
+    public void be(Collection<?> expectedCollection) {
+        if (this.anyOrder) {
+            assertCondition(partialAssertionErrorMessage() + "to be same (in any order) as " + join(expectedCollection) + ".", () -> {
+                if (actualCollection == null) {
+                    return false;
+                } else {
+                    final List<String> testActualList = ignoreCase ? actualCollection.stream().map(o -> o.toString().toLowerCase()).sorted().toList() : actualCollection.stream().map(Object::toString).sorted().toList();
+                    final List<String> testedExpectedList = ignoreCase ? expectedCollection.stream().map(o -> o.toString().toLowerCase()).sorted().toList() : expectedCollection.stream().map(Object::toString).sorted().toList();
 
-            if (testActualList.size() != testedExpectedList.size()) {
-                return negated;
-            } else {
-                for (int i = 0; i < testActualList.size(); i++) {
-                    if (!testActualList.get(i).equals(testedExpectedList.get(i))) {
+                    if (testActualList.size() != testedExpectedList.size()) {
                         return negated;
+                    } else {
+                        for (int i = 0; i < testActualList.size(); i++) {
+                            if (!testActualList.get(i).equals(testedExpectedList.get(i))) {
+                                return negated;
+                            }
+                        }
+                        return !negated;
                     }
                 }
-                return !negated;
-            }
-        });
+            });
+        } else {
+            assertCondition(partialAssertionErrorMessage() + "to be same as " + join(expectedCollection) + ".", () -> {
+                if (actualCollection == null) {
+                    return false;
+                } else {
+                    final List<String> testActualList = ignoreCase ? actualCollection.stream().map(o -> o.toString().toLowerCase()).toList() : actualCollection.stream().map(Object::toString).toList();
+                    final List<String> testedExpectedList = ignoreCase ? expectedCollection.stream().map(o -> o.toString().toLowerCase()).toList() : expectedCollection.stream().map(Object::toString).toList();
 
-    }
-
-    public void beSameInAnyOrderAs(Object[] expected) {
-        this.beSameInAnyOrderAs(Arrays.asList(expected));
-    }
-
-    public void beSameInAnyOrderAs(Collection<?> expectedCollection) {
-        assertCondition(partialAssertionErrorMessage() + "to be same (in any order) as " + join(expectedCollection) + ".", () -> {
-            final List<String> testActualList = ignoreCase ? actualCollection.stream().map(o -> o.toString().toLowerCase()).sorted().toList() : actualCollection.stream().map(Object::toString).sorted().toList();
-            final List<String> testedExpectedList = ignoreCase ? expectedCollection.stream().map(o -> o.toString().toLowerCase()).sorted().toList() : expectedCollection.stream().map(Object::toString).sorted().toList();
-
-            if (testActualList.size() != testedExpectedList.size()) {
-                return negated;
-            } else {
-                for (int i = 0; i < testActualList.size(); i++) {
-                    if (!testActualList.get(i).equals(testedExpectedList.get(i))) {
+                    if (testActualList.size() != testedExpectedList.size()) {
                         return negated;
+                    } else {
+                        for (int i = 0; i < testActualList.size(); i++) {
+                            if (!testActualList.get(i).equals(testedExpectedList.get(i))) {
+                                return negated;
+                            }
+                        }
+                        return !negated;
                     }
                 }
-                return !negated;
-            }
-        });
+            });
+        }
     }
 
     public void haveSizeOf(int expectedSize) {
-        assertCondition(partialAssertionErrorMessage() + "to have size of " + expectedSize + ", but was " + actualCollection.size() + ".", () -> {
-            return (actualCollection.size() == expectedSize) != negated;
+        assertCondition(partialAssertionErrorMessage() + "to have size of " + expectedSize + ", but was " + (actualCollection == null ? "null collection" : actualCollection.size()) + ".", () -> {
+            if (actualCollection == null) {
+                return false;
+            } else {
+                return (actualCollection.size() == expectedSize) != negated;
+            }
         });
     }
 
@@ -74,15 +87,19 @@ public final class CollectionConditions extends Conditions {
 
     public void have(Collection<?> expectedCollection) {
         assertCondition(partialAssertionErrorMessage() + "to be same (in any order) as " + join(expectedCollection) + ".", () -> {
-            final List<String> testActualList = ignoreCase ? actualCollection.stream().map(o -> o.toString().toLowerCase()).toList() : actualCollection.stream().map(Object::toString).toList();
-            final List<String> testedExpectedList = ignoreCase ? expectedCollection.stream().map(o -> o.toString().toLowerCase()).toList() : expectedCollection.stream().map(Object::toString).toList();
+            if (actualCollection == null) {
+                return false;
+            } else {
+                final List<String> testActualList = ignoreCase ? actualCollection.stream().map(o -> o.toString().toLowerCase()).toList() : actualCollection.stream().map(Object::toString).toList();
+                final List<String> testedExpectedList = ignoreCase ? expectedCollection.stream().map(o -> o.toString().toLowerCase()).toList() : expectedCollection.stream().map(Object::toString).toList();
 
-            for (String expected : testedExpectedList) {
-                if (!testActualList.contains(expected)) {
-                    return negated;
+                for (String expected : testedExpectedList) {
+                    if (!testActualList.contains(expected)) {
+                        return negated;
+                    }
                 }
+                return !negated;
             }
-            return !negated;
         });
     }
 
@@ -99,6 +116,10 @@ public final class CollectionConditions extends Conditions {
     }
 
     private String join(Collection<?> collection) {
-        return "'" + String.join(", ", collection.stream().map(Object::toString).toList()) + "'";
+        if (collection == null) {
+            return "null";
+        } else {
+            return "'" + String.join(", ", collection.stream().map(Object::toString).toList()) + "'";
+        }
     }
 }

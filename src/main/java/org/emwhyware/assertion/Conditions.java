@@ -3,15 +3,12 @@ package org.emwhyware.assertion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class Conditions {
-    protected final AssertionGroup group;
-    protected final String labelForActual;
+public abstract class Conditions extends Connector {
     protected final boolean negated;
     protected final boolean ignoreCase;
 
     protected Conditions(@Nullable AssertionGroup group, @NonNull String labelForActual, boolean negated, boolean ignoreCase) {
-        this.group = group;
-        this.labelForActual = labelForActual;
+        super(group, labelForActual);
         this.negated = negated;
         this.ignoreCase = ignoreCase;
     }

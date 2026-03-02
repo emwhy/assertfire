@@ -1,24 +1,25 @@
 package org.emwhyware.assertion.collection;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 public interface CollectionAssertor {
-    default CollectionIgnoringCaseOrTo expect(@NonNull Object[] actual) {
+    default CollectionTo expect(@Nullable Object[] actual) {
         return expect("", actual);
     }
 
-    default CollectionIgnoringCaseOrTo expect(@NonNull String labelForActual, @NonNull Object[] actual) {
-        return new CollectionIgnoringCaseOrTo(null, labelForActual, Arrays.stream(actual).toList(), false, false);
+    default CollectionTo expect(@NonNull String labelForActual, @Nullable Object[] actual) {
+        return new CollectionTo(null, labelForActual, actual == null ? null : Arrays.stream(actual).toList(), false, false, false);
     }
 
-    default CollectionIgnoringCaseOrTo expect(@NonNull Collection<?> actual) {
+    default CollectionTo expect(@Nullable Collection<?> actual) {
         return expect("", actual);
     }
 
-    default CollectionIgnoringCaseOrTo expect(@NonNull String labelForActual, @NonNull Collection<?> actual) {
-        return new CollectionIgnoringCaseOrTo(null, labelForActual, actual, false, false);
+    default CollectionTo expect(@NonNull String labelForActual, @Nullable Collection<?> actual) {
+        return new CollectionTo(null, labelForActual, actual, false, false, false);
     }
 }

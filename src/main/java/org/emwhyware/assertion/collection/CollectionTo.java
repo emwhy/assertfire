@@ -9,10 +9,10 @@ import org.emwhyware.assertion.string.StringConditions;
 import java.util.Collection;
 
 public class CollectionTo extends Connector {
-    public final CollectionConditions to;
+    public final CollectionAllConditions to;
 
-    protected CollectionTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @NonNull Collection<?> actual, boolean negated, boolean ignoreCase) {
+    protected CollectionTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Collection<?> actual, boolean negated, boolean ignoreCase, boolean anyOrder) {
         super(group, labelForActual);
-        this.to = new CollectionConditions(group, labelForActual, actual, negated, ignoreCase);
+        this.to = new CollectionAllConditions(group, labelForActual, actual, negated, ignoreCase, anyOrder);
     }
 }

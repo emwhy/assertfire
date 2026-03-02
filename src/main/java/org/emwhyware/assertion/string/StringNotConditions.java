@@ -1,0 +1,14 @@
+package org.emwhyware.assertion.string;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.emwhyware.assertion.AssertionGroup;
+
+public class StringNotConditions extends StringConditions {
+    public final StringConditions caseInsensitively;
+
+    StringNotConditions(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable String actual, boolean negated, boolean ignoreCase) {
+        super(group, labelForActual, actual, negated, ignoreCase);
+        this.caseInsensitively = new StringConditions(group, labelForActual, actual, negated, true);
+    }
+}

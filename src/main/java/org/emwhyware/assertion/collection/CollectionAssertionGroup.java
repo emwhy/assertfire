@@ -1,6 +1,7 @@
 package org.emwhyware.assertion.collection;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emwhyware.assertion.AssertionGroup;
 
 import java.util.Arrays;
@@ -13,19 +14,19 @@ public final class CollectionAssertionGroup {
         this.group = group;
     }
 
-    public CollectionIgnoringCaseOrTo expect(@NonNull Object[] actual) {
+    public CollectionTo expect(@Nullable Object[] actual) {
         return expect("", actual);
     }
 
-    public CollectionIgnoringCaseOrTo expect(@NonNull String labelForActual, @NonNull Object[] actual) {
-        return new CollectionIgnoringCaseOrTo(group, labelForActual, Arrays.stream(actual).toList(), false, false);
+    public CollectionTo expect(@NonNull String labelForActual, @Nullable Object[] actual) {
+        return new CollectionTo(group, labelForActual, actual == null ? null : Arrays.stream(actual).toList(), false, false, false);
     }
 
-    public CollectionIgnoringCaseOrTo expect(@NonNull Collection<?> actual) {
+    public CollectionTo expect(@Nullable Collection<?> actual) {
         return expect("", actual);
     }
 
-    public CollectionIgnoringCaseOrTo expect(@NonNull String labelForActual, @NonNull Collection<?> actual) {
-        return new CollectionIgnoringCaseOrTo(group, labelForActual, actual, false, false);
+    public CollectionTo expect(@NonNull String labelForActual, @Nullable Collection<?> actual) {
+        return new CollectionTo(group, labelForActual, actual, false, false, false);
     }
 }

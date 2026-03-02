@@ -5,19 +5,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emwhyware.assertion.bool.BooleanAssertionGroup;
 import org.emwhyware.assertion.bool.BooleanToOrNot;
 import org.emwhyware.assertion.collection.CollectionAssertionGroup;
-import org.emwhyware.assertion.collection.CollectionIgnoringCaseOrTo;
+import org.emwhyware.assertion.collection.CollectionTo;
 import org.emwhyware.assertion.date.DateAssertionGroup;
 import org.emwhyware.assertion.date.DateToOrNot;
 import org.emwhyware.assertion.exception.AssertionGroupError;
 import org.emwhyware.assertion.number.NumberAssertionGroup;
 import org.emwhyware.assertion.number.NumberToOrNot;
 import org.emwhyware.assertion.string.StringAssertionGroup;
-import org.emwhyware.assertion.string.StringIgnoringCaseOrTo;
+import org.emwhyware.assertion.string.StringTo;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -70,11 +69,11 @@ public final class AssertionGroup {
             this.bool = new BooleanAssertionGroup(AssertionGroup.this);
         }
 
-        public StringIgnoringCaseOrTo expect(@Nullable String actual) {
+        public StringTo expect(@Nullable String actual) {
             return expect("", actual);
         }
 
-        public StringIgnoringCaseOrTo expect(@NonNull String labelForActual, @Nullable String actual) {
+        public StringTo expect(@NonNull String labelForActual, @Nullable String actual) {
             return string.expect(labelForActual, actual);
         }
 
@@ -136,19 +135,19 @@ public final class AssertionGroup {
             return date.expect(labelForActual, actual);
         }
 
-        public CollectionIgnoringCaseOrTo expect(@NonNull Object[] actual) {
+        public CollectionTo expect(@NonNull Object[] actual) {
             return expect("", actual);
         }
 
-        public CollectionIgnoringCaseOrTo expect(@NonNull String labelForActual, @NonNull Object[] actual) {
+        public CollectionTo expect(@NonNull String labelForActual, @NonNull Object[] actual) {
             return collection.expect(labelForActual, actual);
         }
 
-        public CollectionIgnoringCaseOrTo expect(@NonNull Collection<?> actual) {
+        public CollectionTo expect(@NonNull Collection<?> actual) {
             return expect("", actual);
         }
 
-        public CollectionIgnoringCaseOrTo expect(@NonNull String labelForActual, @NonNull Collection<?> actual) {
+        public CollectionTo expect(@NonNull String labelForActual, @NonNull Collection<?> actual) {
             return collection.expect(labelForActual, actual);
         }
 

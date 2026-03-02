@@ -6,10 +6,10 @@ import org.emwhyware.assertion.AssertionGroup;
 import org.emwhyware.assertion.Connector;
 
 public class StringTo extends Connector {
-    public final StringConditions to;
+    public final StringAllConditions to;
 
     protected StringTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable String actual, boolean negated, boolean ignoreCase) {
         super(group, labelForActual);
-        this.to = new StringConditions(group, labelForActual, actual, negated, ignoreCase);
+        this.to = new StringAllConditions(group, labelForActual, actual, negated, ignoreCase);
     }
 }
