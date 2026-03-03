@@ -1,0 +1,21 @@
+package org.emw.assertion.string;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.emw.assertion.AssertionGroup;
+
+public final class StringAssertionGroup {
+    private final AssertionGroup group;
+
+    public StringAssertionGroup(@NonNull AssertionGroup group) {
+        this.group = group;
+    }
+
+    public StringTo expect(@Nullable String actual) {
+        return expect("", actual);
+    }
+
+    public StringTo expect(@NonNull String labelForActual, @Nullable String actual) {
+        return new StringTo(group, labelForActual, actual, false, false);
+    }
+}

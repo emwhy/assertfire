@@ -3,11 +3,22 @@ plugins {
     id("org.checkerframework").version("0.6.61")
 }
 
-group = "emwhyware-assertion"
-version = "1.0-SNAPSHOT"
+group = "emw-assertion"
+version = "release"
 
 repositories {
     mavenCentral()
+}
+
+java {
+    withJavadocJar()
+}
+
+checkerFramework {
+    this.checkers = listOf(
+        "org.checkerframework.checker.nullness.NullnessChecker",
+        "org.checkerframework.checker.optional.OptionalChecker"
+    )
 }
 
 dependencies {
