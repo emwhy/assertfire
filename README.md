@@ -1,9 +1,182 @@
 # emw-Assertion
 
-Assertion is obviously important when implementing UI or API test automation. How it is implemented can affect the code readability greatly.
+emw-Assertion is a library that provides fluent assertions. It can be used for any projects, such as UI test automation, API test automation and unit testing, that needs to assert various data types.
 
-This assertion library provides:
+## Highlights
 
-- Fluent, English-like assertion structure with expect ... to ... format.
-- Easily readable error message.
+- Fluent, English-like assertion structure with "expect ... to ..." format.
+- Supports assertions with string, numeric values and classes, collections, array, and date objects (SQL Date and LocalDate).
 - Assertion grouping.
+
+## Contents
+
+  * [Fluent Assertions](#fluent-assertions)
+  * [Assertion Groups](#assertion-groups)
+  * [Setting Up emw-Assertion](#setting-up-emw-assertion)
+  * [Implementing emw-Assertion](#implementing-emw-assertion)
+  * [Finally...](#finally)
+
+## Fluent Assertions
+
+As you can see in these examples, it is written in very fluent manner. It's easy to read what is being asserted. With IDE's code completion tool, it is fast to write them.
+
+```java
+    // Strings.
+    expect("Test 1", testText).to.startWith("te");
+    expect("Test 2", testText).to.caseInsensitively.startWith("TES");
+    expect("Test 3", testText).to.not.endWith("es");
+    expect("Test 4", testText).to.caseInsensitively.not.endWith("ES");
+    expect("Test 5", testText).to.be(testText);
+    expect("Test 6", testText).to.caseInsensitively.not.be("ES");
+    expect("Test 7", testText).to.contain("es");
+    expect("Test 8", testText).to.caseInsensitively.contain("ES");
+    expect("Test 9", testText).to.match("\\w+");
+    expect("Test 10", testText).to.not.match("\\d+");
+    expect("Test 11", testText).to.be.oneOf(testText, "test2", "test3");
+    expect("Test 22", testText).to.caseInsensitively.be.oneOf(testText, "TEST2",  "TEST3");
+
+    // Numbers.
+    expect("Test 1", i).to.be(10);
+    expect("Test 2", i).to.be(10.1f);
+    expect("Test 3", i).to.not.be(10);
+    expect("Test 4", i).to.be.moreThan(10);
+    expect("Test 5", i).to.be.lessThan(10.2f);
+    expect("Test 6", i).to.be.moreThanOrEqual(9.9f);
+    expect("Test 7", i).to.be.lessThanOrEqual(10.1f);
+    expect("Test 8", i).to.be.moreThanOrEqual(10.0f);
+    expect("Test 9", i).to.be.lessThanOrEqual(10.0);
+    expect("Test 10", i).to.be.between(9.9, 11);
+
+    // Collection
+    expect("Test 1", testCollection).to.be("test1", "test2");
+    expect("Test 2", testCollection).to.inAnyOrder.be("test2", "test1");
+    expect("Test 3", testCollection).to.have("test2", "test1");
+    expect("Test 4", testCollection).to.caseInsensitively.be("Test1", "test2");
+    expect("Test 5", testCollection).to.caseInsensitively.inAnyOrder.be("Test2", "test1");
+    expect("Test 6", testCollection).to.caseInsensitively.have("Test2");
+    expect("Test 7", testCollection).to.haveSizeOf(2);
+    expect("Test 8", testCollection).to.be.empty();
+
+    // Boolean
+    expect("Test 1", testBoolean).to.be.trueValue();
+    expect("Test 2", testBoolean).to.not.be.trueValue();
+    
+    // Dates
+    expect("Test 1", testLocalDate).to.be.sameDate(testLocalDate);
+    expect("Test 2", testLocalDate).to.not.be.sameDate(LocalDate.of(2020, 1, 2));
+    expect("Test 3", testLocalDate).to.be.after(LocalDate.of(2019, 12, 31));
+    expect("Test 4", testLocalDate).to.be.before(LocalDate.of(2020, 1, 2));
+    expect("Test 5", testLocalDate).to.be.sameOrBefore(testLocalDate);
+    expect("Test 6", testLocalDate).to.be.sameOrBefore(LocalDate.of(2020, 1, 2));
+    expect("Test 7", testLocalDate).to.be.sameOrAfter(testLocalDate);
+    expect("Test 8", testLocalDate).to.be.sameOrAfter(LocalDate.of(2019, 12, 31));
+    expect("Test 9", testLocalDate).to.be.between(LocalDate.of(2019, 12, 31), LocalDate.of(2020, 1, 2));
+
+```
+
+## Assertion Groups
+
+AssertionGroup allows grouping multiple assertions.
+
+All assertions within a group are tested before throwing*AssertionGroupError**. If multiple assertion failed, all errors are returned in exception message.
+
+This is useful when multiple values need to be checked within the same context. It can save you from executing your tests multiple times to find out all the errors may exist in a context.
+
+```java
+    // This would throw AssertionError on the first "expect". Until this is fixed, you have no idea
+    // there are other errors or not.
+    expect("test").to.be("test1");
+    expect("test").to.be("test2");
+    expect(1).to.be(1);
+    expect(1).to.be(0);
+    
+     // This would assert all of "expect" and show which ones fail, saving repeated execution of tests.
+     assertionGroup(g -> {
+         g.expect("test").to.be("test1");
+         g.expect("test").to.be("test2");
+         g.expect(1).to.be(1);
+         g.expect(1).to.be(0);
+     });    
+```
+
+The error message lists all of the encountered errors.
+
+```
+org.emw.assertion.exception.AssertionGroupError: 3 errors in group
+
+	Error #1: java.lang.AssertionError: Expected 'test' to equal 'test1'.
+
+	Error #2: java.lang.AssertionError: Expected 'test' to equal 'test2'.
+
+	Error #3: java.lang.AssertionError: Expected '1' to equal '0'.
+
+	Error Stack #1:
+		at org.emw.assertion.Conditions.assertCondition(Conditions.java:25)
+		at org.emw.assertion.string.StringConditions.be(StringConditions.java:23)
+		at org.emw.assertion.regression.AssertionTest.lambda$testGroup$69(AssertionTest.java:212)
+		at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:71)
+		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)
+		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:37)
+		at org.emw.assertion.regression.AssertionTest.testGroup(AssertionTest.java:211)
+		at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
+
+	Error Stack #2:
+		at org.emw.assertion.Conditions.assertCondition(Conditions.java:25)
+		at org.emw.assertion.string.StringConditions.be(StringConditions.java:23)
+		at org.emw.assertion.regression.AssertionTest.lambda$testGroup$69(AssertionTest.java:213)
+		at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:71)
+		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)
+		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:37)
+		at org.emw.assertion.regression.AssertionTest.testGroup(AssertionTest.java:211)
+		at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
+
+	Error Stack #3:
+		at org.emw.assertion.Conditions.assertCondition(Conditions.java:25)
+		at org.emw.assertion.number.NumberConditions.be(NumberConditions.java:35)
+		at org.emw.assertion.number.NumberConditions.be(NumberConditions.java:19)
+		at org.emw.assertion.regression.AssertionTest.lambda$testGroup$69(AssertionTest.java:215)
+		at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:71)
+		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)
+		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:37)
+		at org.emw.assertion.regression.AssertionTest.testGroup(AssertionTest.java:211)
+		at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
+
+	at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:74)
+	at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)
+	at org.emw.assertion.Assertor.assertionGroup(Assertor.java:37)
+	at org.emw.assertion.regression.AssertionTest.testGroup(AssertionTest.java:211)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:687)
+```
+
+## Setting Up emw-Assertion
+
+- Ensure that your project is setup with ***Java 17*** or higher.
+- Download the latest **emw-assertion-release.jar** file from https://github.com/emwhy/assertion/releases/. The javadoc for the framework is packaged in  ***emw-assertion-release-javadoc.jar***. When configured, the documentation can be shown right from IDE (such as IntelliJ).
+- Move the file to appropriate location in a project directory (i.e., ./lib).
+- Add **emw-assertion-release.jar** to the Gradle dependency.
+```
+dependencies {
+    implementation(files("lib/emw-assertion-release.jar"));
+}
+```
+- Reload your Gradle. You should now be able to use emw-Assertion classes.
+
+## Implementing emw-Assertion
+
+To get access to all of "expect" and "assertionGroup" methods, implement **Assertor** interface to your test class.
+
+Once this is done, all methods become available in any method within the class.
+
+```java
+public class AssertionTest implements Assertor {
+    ...
+}
+
+```
+
+## Finally...
+
+If you are working on UI test automation project, please also take a look at [Selentic Framework](https://github.com/emwhy/selentic-framework).
