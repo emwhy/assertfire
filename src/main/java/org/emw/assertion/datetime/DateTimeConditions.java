@@ -21,7 +21,7 @@ public class DateTimeConditions extends Conditions {
     }
 
     public void be(@NonNull LocalDateTime expected) {
-        assertCondition(partialAssertionErrorMessage() + "to be the same date as '" + expected.format(DATE_FORMATTER) + "'.", () -> {
+        assertCondition(partialAssertionErrorMessage() + "to be '" + expected.format(DATE_FORMATTER) + "'.", () -> {
             if (actualLocalDateTime == null) {
                 return false;
             } else {

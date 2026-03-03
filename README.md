@@ -5,7 +5,7 @@ emw-Assertion is a library that provides fluent assertions. It can be used for a
 ## Highlights
 
 - Fluent, English-like assertion structure with "expect ... to ..." format.
-- Supports assertions with string, numeric values and classes, collections, array, and date objects (SQL Date and LocalDate).
+- Supports assertions with string, numeric values and classes, collections, array, date objects (SQL Date and LocalDate), and date/time object (LocalDateTime).
 - Assertion grouping.
 
 ## Contents
@@ -61,16 +61,33 @@ As you can see in these examples, it is written in very fluent manner. It's easy
     expect("Test 1", testBoolean).to.be.trueValue();
     expect("Test 2", testBoolean).to.not.be.trueValue();
     
-    // Dates
-    expect("Test 1", testLocalDate).to.be.sameDate(testLocalDate);
-    expect("Test 2", testLocalDate).to.not.be.sameDate(LocalDate.of(2020, 1, 2));
-    expect("Test 3", testLocalDate).to.be.after(LocalDate.of(2019, 12, 31));
-    expect("Test 4", testLocalDate).to.be.before(LocalDate.of(2020, 1, 2));
-    expect("Test 5", testLocalDate).to.be.sameOrBefore(testLocalDate);
-    expect("Test 6", testLocalDate).to.be.sameOrBefore(LocalDate.of(2020, 1, 2));
-    expect("Test 7", testLocalDate).to.be.sameOrAfter(testLocalDate);
-    expect("Test 8", testLocalDate).to.be.sameOrAfter(LocalDate.of(2019, 12, 31));
-    expect("Test 9", testLocalDate).to.be.between(LocalDate.of(2019, 12, 31), LocalDate.of(2020, 1, 2));
+    // Date
+    expect("Test 1", testDate).to.be(LocalDate.of(2020, 1, 1));
+    expect("Test 2", testDate).to.not.be(LocalDate.of(2020, 1, 2));
+    expect("Test 3", testDate).to.be.sameDateAs(LocalDateTime.of(2020, 1, 1, 2, 3, 45));
+    expect("Test 4", testDate).to.be.after(LocalDate.of(2019, 12, 31));
+    expect("Test 5", testDate).to.be.before(LocalDate.of(2020, 1, 2));
+    expect("Test 6", testDate).to.be.sameOrBefore(LocalDate.of(2020, 1, 1));
+    expect("Test 7", testDate).to.be.sameOrBefore(LocalDate.of(2020, 1, 2));
+    expect("Test 8", testDate).to.be.sameOrAfter(LocalDate.of(2020, 1, 1));
+    expect("Test 9", testDate).to.be.sameOrAfter(LocalDate.of(2019, 12, 31));
+    expect("Test 10", testDate).to.be.between(LocalDate.of(2019, 12, 31), LocalDate.of(2020, 1, 2));
+    expect("Test 11", nullDate).to.be.nullValue();
+    expect("Test 12", LocalDate.now()).to.not.be.nullValue();
+
+    // Date/Time
+    expect("Test 1", testDateTime).to.be.sameDateAs(LocalDate.of(2020, 1, 1));
+    expect("Test 2", testDateTime).to.be.sameDateAs(LocalDateTime.of(2020, 1, 1, 12, 12));
+    expect("Test 3", testDateTime).to.not.be.sameDateAs(LocalDate.of(2020, 1, 2));
+    expect("Test 4", testDateTime).to.be(LocalDateTime.of(2020, 1, 1, 0, 0));
+    expect("Test 5", testDateTime).to.not.be(LocalDateTime.of(2020, 1, 1, 12, 12));
+    expect("Test 6", testDateTime).to.be.after(LocalDateTime.of(2019, 12, 31, 23, 59));
+    expect("Test 7", testDateTime).to.be.before(LocalDateTime.of(2020, 1, 2, 0, 0));
+    expect("Test 8", testDateTime).to.be.sameOrBefore(LocalDateTime.of(2020, 1, 1, 0, 0));
+    expect("Test 9", testDateTime).to.be.sameOrBefore(LocalDateTime.of(2020, 1, 1, 1, 1));
+    expect("Test 10", testDateTime).to.be.sameOrAfter(LocalDateTime.of(2020, 1, 1, 0, 0));
+    expect("Test 11", testDateTime).to.be.sameOrAfter(LocalDateTime.of(2019, 12, 31, 23, 59));
+    expect("Test 12", testDateTime).to.be.between(LocalDateTime.of(2019, 12, 31, 23, 59), LocalDateTime.of(2020, 1, 1, 0, 0, 1));
 
 ```
 

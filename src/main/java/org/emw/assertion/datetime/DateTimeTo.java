@@ -8,10 +8,10 @@ import org.emw.assertion.Connector;
 import java.time.LocalDateTime;
 
 public class DateTimeTo extends Connector {
-    public final DateTimeNotBe to;
+    public final DateTimeNotBeConditions to;
 
     protected DateTimeTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime, boolean negated) {
         super(group, labelForActual);
-        this.to = new DateTimeNotBe(group, labelForActual, actualLocalDateTime, negated);
+        this.to = new DateTimeNotBeConditions(group, labelForActual, actualLocalDateTime, negated);
     }
 }

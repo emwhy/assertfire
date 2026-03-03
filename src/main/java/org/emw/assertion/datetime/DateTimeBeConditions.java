@@ -20,6 +20,27 @@ public class DateTimeBeConditions extends Conditions {
         this.actualLocalDateTime = actualLocalDateTime;
     }
 
+
+    public void today() {
+        assertCondition(partialAssertionErrorMessage() + "to be today.", () -> {
+            if (actualLocalDateTime == null) {
+                return false;
+            } else {
+                return actualLocalDateTime.toLocalDate().isEqual(LocalDate.now()) != negated;
+            }
+        });
+    }
+
+    public void year(int year) {
+        assertCondition(partialAssertionErrorMessage() + "to be year " + year + "." , () -> {
+            if (actualLocalDateTime == null) {
+                return false;
+            } else {
+                return (actualLocalDateTime.getYear() == year) != negated;
+            }
+        });
+    }
+
     public void sameDateAs(@NonNull Date date) {
         this.sameDateAs(date.toLocalDate());
     }
@@ -83,7 +104,117 @@ public class DateTimeBeConditions extends Conditions {
             if (actualLocalDateTime == null) {
                 return false;
             } else {
-                return (actualLocalDateTime.isEqual(start) || actualLocalDateTime.isAfter(start)) && (actualLocalDateTime.isBefore(end) || actualLocalDateTime.isEqual(end)) != negated;
+                return ((actualLocalDateTime.isEqual(start) || actualLocalDateTime.isAfter(start)) && (actualLocalDateTime.isBefore(end) || actualLocalDateTime.isEqual(end))) != negated;
+            }
+        });
+    }
+
+    public void withinDays(int days) {
+        final LocalDate today = LocalDate.now();
+        final LocalDate targetDate = today.plusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be within " + days + " days from today.", () -> {
+            if  (actualLocalDateTime == null) {
+                return false;
+            } else {
+                final LocalDate actualLocalDate = actualLocalDateTime.toLocalDate();
+
+                return ((actualLocalDate.isEqual(today) || actualLocalDate.isAfter(today)) && (actualLocalDate.isBefore(targetDate) || actualLocalDate.isEqual(targetDate))) != negated;
+            }
+        });
+    }
+
+    public void withinPastDays(int days) {
+        final LocalDate today = LocalDate.now();
+        final LocalDate targetDate = today.minusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be within past " + days + " days from today.", () -> {
+            if  (actualLocalDateTime == null) {
+                return false;
+            } else {
+                final LocalDate actualLocalDate = actualLocalDateTime.toLocalDate();
+
+                return ((actualLocalDate.isEqual(targetDate) || actualLocalDate.isAfter(targetDate)) && (actualLocalDate.isBefore(today) || actualLocalDate.isEqual(today))) != negated;
+            }
+        });
+    }
+
+    public void moreThanDaysInFuture(int days) {
+        final LocalDate targetDate = LocalDate.now().plusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be more than " + days + " days in future.", () -> {
+            if (actualLocalDateTime == null) {
+                return false;
+            } else {
+                final LocalDate actualLocalDate = actualLocalDateTime.toLocalDate();
+
+                return actualLocalDate.isAfter(targetDate) != negated;
+            }
+        });
+    }
+
+    public void moreThanDaysInPast(int days) {
+        final LocalDate targetDate = LocalDate.now().minusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be more than " + days + " days in past.", () -> {
+            if (actualLocalDateTime == null) {
+                return false;
+            } else {
+                final LocalDate actualLocalDate = actualLocalDateTime.toLocalDate();
+
+                return actualLocalDate.isBefore(targetDate) != negated;
+            }
+        });
+    }
+
+    public void withinHours(int hours) {
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime targetDateTime = now.plusHours(hours);
+
+        assertCondition(partialAssertionErrorMessage() + "to be within " + hours + " hours from '" +  now.format(DATETIME_FORMATTER) + "'.", () -> {
+            if  (actualLocalDateTime == null) {
+                return false;
+            } else {
+                return ((actualLocalDateTime.isEqual(now) || actualLocalDateTime.isAfter(now)) && (actualLocalDateTime.isBefore(targetDateTime) || actualLocalDateTime.isEqual(targetDateTime))) != negated;
+            }
+        });
+    }
+
+    public void withinPastHours(int hours) {
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime targetDateTime = now.minusHours(hours);
+
+        assertCondition(partialAssertionErrorMessage() + "to be within past " + hours + " hours from '" +  now.format(DATETIME_FORMATTER) + "'.", () -> {
+            if  (actualLocalDateTime == null) {
+                return false;
+            } else {
+                return ((actualLocalDateTime.isEqual(targetDateTime) || actualLocalDateTime.isAfter(targetDateTime)) && (actualLocalDateTime.isBefore(now) || actualLocalDateTime.isEqual(now))) != negated;
+            }
+        });
+    }
+
+    public void moreThanHoursInFuture(int hours) {
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime targetDateTime = now.plusHours(hours);
+
+        assertCondition(partialAssertionErrorMessage() + "to be more than " + hours + " hours in future from '" + now.format(DATETIME_FORMATTER) + "'.", () -> {
+            if (actualLocalDateTime == null) {
+                return false;
+            } else {
+                return actualLocalDateTime.isAfter(targetDateTime) != negated;
+            }
+        });
+    }
+
+    public void moreThanHoursInPast(int hours) {
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime targetDateTime = now.minusHours(hours);
+
+        assertCondition(partialAssertionErrorMessage() + "to be more than " + hours + " hours in past from '" + now.format(DATETIME_FORMATTER) + "'.", () -> {
+            if (actualLocalDateTime == null) {
+                return false;
+            } else {
+                return actualLocalDateTime.isBefore(targetDateTime) != negated;
             }
         });
     }

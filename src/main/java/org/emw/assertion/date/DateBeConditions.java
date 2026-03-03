@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateBeConditions extends Conditions {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final @Nullable LocalDate actualLocalDate;
 
     protected DateBeConditions(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable LocalDate actualLocalDate, boolean negated) {
@@ -19,20 +20,32 @@ public class DateBeConditions extends Conditions {
         this.actualLocalDate = actualLocalDate;
     }
 
-    public void sameDateAs(@NonNull Date date) {
-        this.sameDateAs(date.toLocalDate());
-    }
-
-    public void sameDateAs(@NonNull LocalDateTime localDateTime) {
-        this.sameDateAs(localDateTime.toLocalDate());
-    }
-
-    public void sameDateAs(@NonNull LocalDate expected) {
-        assertCondition(partialAssertionErrorMessage() + "to be the same date as '" + expected.format(FORMATTER) + "'.", () -> {
+    public void today() {
+        assertCondition(partialAssertionErrorMessage() + "to be today.", () -> {
             if (actualLocalDate == null) {
                 return false;
             } else {
-                return actualLocalDate.isEqual(expected) != negated;
+                return actualLocalDate.isEqual(LocalDate.now()) != negated;
+            }
+        });
+    }
+
+    public void year(int year) {
+        assertCondition(partialAssertionErrorMessage() + "to be year " + year + "." , () -> {
+            if (actualLocalDate == null) {
+                return false;
+            } else {
+                return (actualLocalDate.getYear() == year) != negated;
+            }
+        });
+    }
+
+    public void sameDateAs(@NonNull LocalDateTime expected) {
+        assertCondition(partialAssertionErrorMessage() + "to be the same date as '" + expected.format(DATETIME_FORMATTER) + "'.", () -> {
+            if (actualLocalDate == null) {
+                return false;
+            } else {
+                return actualLocalDate.isEqual(expected.toLocalDate()) != negated;
             }
         });
     }
@@ -42,7 +55,7 @@ public class DateBeConditions extends Conditions {
     }
 
     public void before(@NonNull LocalDate expected) {
-        assertCondition(partialAssertionErrorMessage() + "to be before '" + expected.format(FORMATTER) + "'.", () -> {
+        assertCondition(partialAssertionErrorMessage() + "to be before '" + expected.format(DATE_FORMATTER) + "'.", () -> {
             if (actualLocalDate == null) {
                 return false;
             } else {
@@ -56,7 +69,7 @@ public class DateBeConditions extends Conditions {
     }
 
     public void after(@NonNull LocalDate expected) {
-        assertCondition(partialAssertionErrorMessage() + "to be after '" + expected.format(FORMATTER) + "'.", () -> {
+        assertCondition(partialAssertionErrorMessage() + "to be after '" + expected.format(DATE_FORMATTER) + "'.", () -> {
             if (actualLocalDate == null) {
                 return false;
             } else {
@@ -70,7 +83,7 @@ public class DateBeConditions extends Conditions {
     }
 
     public void sameOrBefore(@NonNull LocalDate expected) {
-        assertCondition(partialAssertionErrorMessage() + "to be the same or before '" + expected.format(FORMATTER) + "'.", () -> {
+        assertCondition(partialAssertionErrorMessage() + "to be the same or before '" + expected.format(DATE_FORMATTER) + "'.", () -> {
             if (actualLocalDate == null) {
                 return false;
             } else {
@@ -84,7 +97,7 @@ public class DateBeConditions extends Conditions {
     }
 
     public void sameOrAfter(@NonNull LocalDate expected) {
-        assertCondition(partialAssertionErrorMessage() + "to be the same or after '" + expected.format(FORMATTER) + "'.", () -> {
+        assertCondition(partialAssertionErrorMessage() + "to be the same or after '" + expected.format(DATE_FORMATTER) + "'.", () -> {
             if  (actualLocalDate == null) {
                 return false;
             } else {
@@ -98,11 +111,61 @@ public class DateBeConditions extends Conditions {
     }
 
     public void between(@NonNull LocalDate start, @NonNull LocalDate end) {
-        assertCondition(partialAssertionErrorMessage() + "to be between '" + start.format(FORMATTER) + "' and '" + end.format(FORMATTER) + "'.", () -> {
+        assertCondition(partialAssertionErrorMessage() + "to be between '" + start.format(DATE_FORMATTER) + "' and '" + end.format(DATE_FORMATTER) + "'.", () -> {
             if (actualLocalDate == null) {
                 return false;
             } else {
-                return (actualLocalDate.isEqual(start) || actualLocalDate.isAfter(start)) && (actualLocalDate.isBefore(end) || actualLocalDate.isEqual(end)) != negated;
+                return ((actualLocalDate.isEqual(start) || actualLocalDate.isAfter(start)) && (actualLocalDate.isBefore(end) || actualLocalDate.isEqual(end))) != negated;
+            }
+        });
+    }
+
+    public void withinDays(int days) {
+        final LocalDate today = LocalDate.now();
+        final LocalDate targetDate = today.plusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be within " + days + " days from today.", () -> {
+            if  (actualLocalDate == null) {
+                return false;
+            } else {
+                return ((actualLocalDate.isEqual(today) || actualLocalDate.isAfter(today)) && (actualLocalDate.isBefore(targetDate) || actualLocalDate.isEqual(targetDate))) != negated;
+            }
+        });
+    }
+
+    public void withinPastDays(int days) {
+        final LocalDate today = LocalDate.now();
+        final LocalDate targetDate = today.minusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be within past " + days + " days from today.", () -> {
+            if  (actualLocalDate == null) {
+                return false;
+            } else {
+                return ((actualLocalDate.isEqual(targetDate) || actualLocalDate.isAfter(targetDate)) && (actualLocalDate.isBefore(today) || actualLocalDate.isEqual(today))) != negated;
+            }
+        });
+    }
+
+    public void moreThanDaysInFuture(int days) {
+        final LocalDate targetDate = LocalDate.now().plusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be more than " + days + " days in future.", () -> {
+            if (actualLocalDate == null) {
+                return false;
+            } else {
+                return actualLocalDate.isAfter(targetDate) != negated;
+            }
+        });
+    }
+
+    public void moreThanDaysInPast(int days) {
+        final LocalDate targetDate = LocalDate.now().minusDays(days);
+
+        assertCondition(partialAssertionErrorMessage() + "to be more than " + days + " days in past.", () -> {
+            if (actualLocalDate == null) {
+                return false;
+            } else {
+                return actualLocalDate.isBefore(targetDate) != negated;
             }
         });
     }
@@ -116,9 +179,9 @@ public class DateBeConditions extends Conditions {
 
     private String partialAssertionErrorMessage() {
         if (labelForActual.isEmpty()) {
-            return "Expected '" + (actualLocalDate == null ? "null" : actualLocalDate.format(FORMATTER)) + "'" + (negated?" not":"") + " ";
+            return "Expected '" + (actualLocalDate == null ? "null" : actualLocalDate.format(DATE_FORMATTER)) + "'" + (negated?" not":"") + " ";
         } else {
-            return "Expected actual value('" + (actualLocalDate == null ? "null" : actualLocalDate.format(FORMATTER)) + "') of '" + labelForActual + "'" + (negated?" not":"") + " ";
+            return "Expected actual value('" + (actualLocalDate == null ? "null" : actualLocalDate.format(DATE_FORMATTER)) + "') of '" + labelForActual + "'" + (negated?" not":"") + " ";
         }
     }
 

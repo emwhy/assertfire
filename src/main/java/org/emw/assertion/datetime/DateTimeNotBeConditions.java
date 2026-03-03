@@ -6,10 +6,10 @@ import org.emw.assertion.AssertionGroup;
 
 import java.time.LocalDateTime;
 
-public class DateTimeNotBe extends DateTimeConditions {
+public class DateTimeNotBeConditions extends DateTimeConditions {
     public final DateTimeConditions not;
 
-    protected DateTimeNotBe(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime, boolean negated) {
+    protected DateTimeNotBeConditions(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime, boolean negated) {
         super(group, labelForActual, actualLocalDateTime, negated);
         this.not = new DateTimeConditions(group, labelForActual, actualLocalDateTime, !negated);
     }

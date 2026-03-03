@@ -160,7 +160,6 @@ public final class AssertionGroup {
             this.date = new DateAssertionGroup(group);
             this.bool = new BooleanAssertionGroup(group);
             this.datetime = new DateTimeAssertionGroup(group);
-            this
         }
 
         public StringTo expect(@Nullable String actual) {
@@ -210,7 +209,6 @@ public final class AssertionGroup {
         public NumberTo expect(@NonNull String labelForActual, @NonNull Number actual) {
             return number.expect(labelForActual, actual);
         }
-
 
         public DateTo expect(@NonNull Date actual) {
             return expect("", actual.toLocalDate());
