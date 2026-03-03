@@ -37,7 +37,7 @@ public class AssertionTest implements Assertor {
         expect("Test 18", "test").to.not.match("\\d+");
 
         expect("Test 19", "test").to.be.oneOf("test", "test2", "test3");
-        expect("Test 20", "test").to.caseInsensitively.be.oneOf("TEST", "TEST2",  "TEST3");
+        expect("Test 20", "test").to.caseInsensitively.be.oneOf("TEST", "TEST2", "TEST3");
         expect("Test 21", "test").to.not.be.oneOf("TEST", "TEST2", "TEST3");
         expect("Test 22", "test").to.caseInsensitively.not.be.oneOf("TEST1", "TEST2", "TEST3");
 
