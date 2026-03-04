@@ -171,7 +171,7 @@ public class AssertionTest implements Assertor {
         expectError(() -> expect("Test 36", LocalDate.of(2020, 1, 3)).to.be.between(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 2)), "Expected actual value('2020-01-03') of 'Test 36' to be between '2020-01-01' and '2020-01-02'.");
         expectError(() -> expect("Test 37", LocalDate.of(2020, 1, 5)).to.be.between(LocalDate.of(2019, 12, 31), LocalDate.of(2020, 1, 1)), "Expected actual value('2020-01-05') of 'Test 37' to be between '2019-12-31' and '2020-01-01'.");
         expectError(() -> expect("Test 38", testDate).to.be.between(LocalDate.of(2020, 1, 2), LocalDate.of(2021, 1, 1)), "Expected actual value('2020-01-01') of 'Test 38' to be between '2020-01-02' and '2021-01-01'.");
-        expectError(() -> expect("Test 39", LocalDate.now()).to.be.nullValue(), "Expected actual value('2026-03-03') of 'Test 39' to be null.");
+        expectError(() -> expect("Test 39", LocalDate.now()).to.be.nullValue(), " to be null.");
         expectError(() -> expect("Test 40", nullDate).to.not.be.nullValue(), "Expected actual value('null') of 'Test 40' not to be null.");
         expectError(() -> expect("Test 41", LocalDate.now().plusDays(3)).to.not.be.withinDays(3), " not to be within 3 days from today.");
         expectError(() -> expect("Test 42", LocalDate.now().plusDays(4)).to.be.withinDays(3), " to be within 3 days from today.");
@@ -259,7 +259,7 @@ public class AssertionTest implements Assertor {
         expectError(() -> expect("Test 59", LocalDateTime.now().plusHours(3)).to.not.be.withinHours(3), " to be within 3 hours from ");
         expectError(() -> expect("Test 60", LocalDateTime.now().plusHours(4)).to.be.withinHours(3), " to be within 3 hours from ");
         expectError(() -> expect("Test 61", LocalDateTime.now().minusHours(1)).to.be.withinHours(3), " to be within 3 hours from ");
-        expectError(() -> expect("Test 62", LocalDateTime.now().minusHours(3)).to.not.be.withinPastHours(3), " to be within past 3 hours from ");
+        expectError(() -> expect("Test 62", LocalDateTime.now().minusHours(2)).to.not.be.withinPastHours(3), " to be within past 3 hours from ");
         expectError(() -> expect("Test 63", LocalDateTime.now().minusHours(4)).to.be.withinPastHours(3), " to be within past 3 hours from ");
         expectError(() -> expect("Test 64", LocalDateTime.now().plusHours(1)).to.be.withinPastHours(3), " to be within past 3 hours from ");
         expectError(() -> expect("Test 65", LocalDateTime.now().plusDays(6)).to.not.be.moreThanDaysInFuture(3), " to be more than 3 days in future.");
