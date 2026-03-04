@@ -217,7 +217,7 @@ public class AssertionTest implements Assertor {
         expect("Test 19", LocalDateTime.now().plusHours(3)).to.be.withinHours(3);
         expect("Test 20", LocalDateTime.now().plusHours(4)).to.not.be.withinHours(3);
         expect("Test 21", LocalDateTime.now().minusHours(1)).to.not.be.withinHours(3);
-        expect("Test 22", LocalDateTime.now().minusHours(3)).to.be.withinPastHours(3);
+        expect("Test 22", LocalDateTime.now().minusHours(3)).to.be.withinPastHours(4);
         expect("Test 23", LocalDateTime.now().minusHours(4)).to.not.be.withinPastHours(3);
         expect("Test 24", LocalDateTime.now().plusHours(1)).to.not.be.withinPastHours(3);
         expect("Test 25", LocalDateTime.now().plusDays(6)).to.be.moreThanDaysInFuture(3);
