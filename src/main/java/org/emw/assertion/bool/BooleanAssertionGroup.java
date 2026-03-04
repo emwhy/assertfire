@@ -11,20 +11,20 @@ public final class BooleanAssertionGroup {
         this.group = group;
     }
 
-    public BooleanTo expect(boolean actual) {
+    public BooleanExpect expect(boolean actual) {
         return expect("", actual);
     }
 
-    public BooleanTo expect(@NonNull String labelForActual, boolean actual) {
-        return new BooleanTo(group, labelForActual, actual, false);
+    public BooleanExpect expect(@NonNull String labelForActual, boolean actual) {
+        return new BooleanExpect(group, labelForActual, actual, false);
     }
 
-    public BooleanTo expect(@Nullable Boolean actual) {
+    public BooleanExpect expect(@Nullable Boolean actual) {
         return expect("", actual);
     }
 
-    public BooleanTo expect(@NonNull String labelForActual, @Nullable Boolean actual) {
-        return new BooleanTo(null, labelForActual, actual, false);
+    public BooleanExpect expect(@NonNull String labelForActual, @Nullable Boolean actual) {
+        return new BooleanExpect(null, labelForActual, actual, false);
     }
 
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>emw-Assertion: Overview</title>
+</head>
+
+<body>
+<h1>emw-Assertion</h1>
+
+emw-Assertion is a library that provides fluent assertions, inspired by Chai (JavaSCript library) in BDD style. It can be used for any projects, such as UI test automation, API test automation and unit testing, that needs to assert various data types.
+
+<h2>Highlights</h2>
+
+<ul>
+    <li>Fluent, English-like assertion structure with "expect ... to ..." BDD style format.</li>
+    <li>Supports assertions with string, numeric values and classes, collections, array, date objects (SQL Date and LocalDate), date/time object (LocalDateTime), and Time (LocalTime).</li>
+    <li>Assertion grouping.</li>
+</ul>
+
+<h2>Assertion Groups</h2>
+
+AssertionGroup allows grouping multiple assertions.
+<p>
+All assertions within a group are tested before throwing*AssertionGroupError**. If multiple assertion failed, all errors are returned in exception message.
+<p>
+This is useful when multiple values need to be checked within the same context. It can save you from executing your tests multiple times to find out all the errors may exist in a context.
+
+<h2>Notable Classes</h2>
+<ul>
+    <li><b><a href="org/emw/assertion/Assertor.html">Assertor</a></b>: Interface to give access to all "expect" methods.</li>
+    <li><b><a href="org/emw/assertion/AssertionGroup.html">AssertionGroup</a></b>: Allows grouping multiple assertions.</li>
+</ul>
+</body>
+
+</html>

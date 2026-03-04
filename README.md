@@ -1,11 +1,11 @@
 # emw-Assertion
 
-emw-Assertion is a library that provides fluent assertions. It can be used for any projects, such as UI test automation, API test automation and unit testing, that needs to assert various data types.
+emw-Assertion is a library that provides fluent assertions, inspired by Chai (JavaSCript library) in BDD style. It can be used for any projects, such as UI test automation, API test automation and unit testing, that needs to assert various data types.
 
 ## Highlights
 
-- Fluent, English-like assertion structure with "expect ... to ..." format.
-- Supports assertions with string, numeric values and classes, collections, array, and date objects (SQL Date and LocalDate).
+- Fluent, English-like assertion structure with "expect ... to ..." BDD style format.
+- Supports assertions with string, numeric values and classes, collections, array, date objects (SQL Date and LocalDate), date/time object (LocalDateTime), and Time (LocalTime).
 - Assertion grouping.
 
 ## Contents
@@ -33,7 +33,7 @@ As you can see in these examples, it is written in very fluent manner. It's easy
     expect("Test 9", testText).to.match("\\w+");
     expect("Test 10", testText).to.not.match("\\d+");
     expect("Test 11", testText).to.be.oneOf("test1", "test2", "test3");
-    expect("Test 22", testText).to.caseInsensitively.be.oneOf("TEST1", "TEST2", "TEST3");
+    expect("Test 12", testText).to.caseInsensitively.be.oneOf("TEST1", "TEST2", "TEST3");
 
     // Numbers.
     expect("Test 1", i).to.be(10);
@@ -61,16 +61,40 @@ As you can see in these examples, it is written in very fluent manner. It's easy
     expect("Test 1", testBoolean).to.be.trueValue();
     expect("Test 2", testBoolean).to.not.be.trueValue();
     
-    // Dates
-    expect("Test 1", testLocalDate).to.be.sameDate(testLocalDate);
-    expect("Test 2", testLocalDate).to.not.be.sameDate(LocalDate.of(2020, 1, 2));
-    expect("Test 3", testLocalDate).to.be.after(LocalDate.of(2019, 12, 31));
-    expect("Test 4", testLocalDate).to.be.before(LocalDate.of(2020, 1, 2));
-    expect("Test 5", testLocalDate).to.be.sameOrBefore(testLocalDate);
-    expect("Test 6", testLocalDate).to.be.sameOrBefore(LocalDate.of(2020, 1, 2));
-    expect("Test 7", testLocalDate).to.be.sameOrAfter(testLocalDate);
-    expect("Test 8", testLocalDate).to.be.sameOrAfter(LocalDate.of(2019, 12, 31));
-    expect("Test 9", testLocalDate).to.be.between(LocalDate.of(2019, 12, 31), LocalDate.of(2020, 1, 2));
+    // Date
+    expect("Test 1", testDate).to.be(LocalDate.of(2020, 1, 1));
+    expect("Test 2", testDate).to.not.be(LocalDate.of(2020, 1, 2));
+    expect("Test 3", testDate).to.be.sameDateAs(LocalDateTime.of(2020, 1, 1, 2, 3, 45));
+    expect("Test 4", testDate).to.be.after(LocalDate.of(2019, 12, 31));
+    expect("Test 5", testDate).to.be.before(LocalDate.of(2020, 1, 2));
+    expect("Test 6", testDate).to.be.sameOrBefore(LocalDate.of(2020, 1, 1));
+    expect("Test 7", testDate).to.be.sameOrAfter(LocalDate.of(2020, 1, 1));
+    expect("Test 8", testDate).to.be.between(LocalDate.of(2019, 12, 31), LocalDate.of(2020, 1, 2));
+    expect("Test 9", nullDate).to.be.nullValue();
+    expect("Test 10", LocalDate.now()).to.not.be.nullValue();
+
+    // Date/Time
+    expect("Test 1", testDateTime).to.be.sameDateAs(LocalDate.of(2020, 1, 1));
+    expect("Test 2", testDateTime).to.be(LocalDateTime.of(2020, 1, 1, 0, 0));
+    expect("Test 3", testDateTime).to.not.be(LocalDateTime.of(2020, 1, 1, 12, 12));
+    expect("Test 4", testDateTime).to.be.after(LocalDateTime.of(2019, 12, 31, 23, 59));
+    expect("Test 5", testDateTime).to.be.before(LocalDateTime.of(2020, 1, 2, 0, 0));
+    expect("Test 6", testDateTime).to.be.sameOrBefore(LocalDateTime.of(2020, 1, 1, 0, 0));
+    expect("Test 7", testDateTime).to.be.sameOrAfter(LocalDateTime.of(2020, 1, 1, 0, 0));
+    expect("Test 8", testDateTime).to.be.between(LocalDateTime.of(2019, 12, 31, 23, 59), LocalDateTime.of(2020, 1, 1, 0, 0, 1));
+
+    // Time
+    expect("Test 1", testTime).to.be(LocalTime.of(11, 0, 0));
+    expect("Test 2", testTime).to.not.be(LocalTime.of(12, 0, 0));
+    expect("Test 3", testTime).to.be.after(LocalTime.of(10, 0, 0));
+    expect("Test 4", testTime).to.not.be.after(LocalTime.of(12, 0, 0));
+    expect("Test 5", testTime).to.be.before(LocalTime.of(12, 0, 0));
+    expect("Test 6", testTime).to.not.be.before(LocalTime.of(10, 0, 0));
+    expect("Test 7", testTime).to.be.between(LocalTime.of(10, 0, 0), LocalTime.of(12, 0, 0));
+    expect("Test 8", testTime).to.be.sameOrAfter(LocalTime.of(11, 0, 0));
+    expect("Test 9", testTime).to.be.sameOrAfter(LocalTime.of(10, 0, 0));
+    expect("Test 10", testTime).to.be.sameOrBefore(LocalTime.of(11, 0, 0));
+    expect("Test 11", testTime).to.be.sameOrBefore(LocalTime.of(12, 0, 0));
 
 ```
 
@@ -111,8 +135,8 @@ org.emw.assertion.exception.AssertionGroupError: 3 errors in group
 	Error #3: java.lang.AssertionError: Expected '1' to equal '0'.
 
 	Error Stack #1:
-		at org.emw.assertion.Conditions.assertCondition(Conditions.java:25)
-		at org.emw.assertion.string.StringConditions.be(StringConditions.java:23)
+		at org.emw.assertion.AssertionMethods.assertCondition(Conditions.java:25)
+		at org.emw.assertion.string.StringAssertionMethods.be(StringConditions.java:23)
 		at org.emw.assertion.regression.AssertionTest.lambda$testGroup$69(AssertionTest.java:212)
 		at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:71)
 		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)
@@ -121,8 +145,8 @@ org.emw.assertion.exception.AssertionGroupError: 3 errors in group
 		at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
 
 	Error Stack #2:
-		at org.emw.assertion.Conditions.assertCondition(Conditions.java:25)
-		at org.emw.assertion.string.StringConditions.be(StringConditions.java:23)
+		at org.emw.assertion.AssertionMethods.assertCondition(Conditions.java:25)
+		at org.emw.assertion.string.StringAssertionMethods.be(StringConditions.java:23)
 		at org.emw.assertion.regression.AssertionTest.lambda$testGroup$69(AssertionTest.java:213)
 		at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:71)
 		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)
@@ -131,9 +155,9 @@ org.emw.assertion.exception.AssertionGroupError: 3 errors in group
 		at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
 
 	Error Stack #3:
-		at org.emw.assertion.Conditions.assertCondition(Conditions.java:25)
-		at org.emw.assertion.number.NumberConditions.be(NumberConditions.java:35)
-		at org.emw.assertion.number.NumberConditions.be(NumberConditions.java:19)
+		at org.emw.assertion.AssertionMethods.assertCondition(Conditions.java:25)
+		at org.emw.assertion.number.NumberAssertionMethods.be(NumberConditions.java:35)
+		at org.emw.assertion.number.NumberAssertionMethods.be(NumberConditions.java:19)
 		at org.emw.assertion.regression.AssertionTest.lambda$testGroup$69(AssertionTest.java:215)
 		at org.emw.assertion.AssertionGroup.group(AssertionGroup.java:71)
 		at org.emw.assertion.Assertor.assertionGroup(Assertor.java:41)

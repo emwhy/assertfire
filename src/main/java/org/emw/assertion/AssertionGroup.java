@@ -4,23 +4,30 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emw.assertion.bool.BooleanAssertionGroup;
 import org.emw.assertion.bool.BooleanAssertor;
-import org.emw.assertion.bool.BooleanTo;
+import org.emw.assertion.bool.BooleanExpect;
 import org.emw.assertion.collection.CollectionAssertionGroup;
 import org.emw.assertion.collection.CollectionAssertor;
-import org.emw.assertion.collection.CollectionTo;
+import org.emw.assertion.collection.CollectionExpect;
 import org.emw.assertion.date.DateAssertionGroup;
 import org.emw.assertion.date.DateAssertor;
-import org.emw.assertion.date.DateTo;
+import org.emw.assertion.date.DateExpect;
+import org.emw.assertion.datetime.DateTimeAssertionGroup;
+import org.emw.assertion.datetime.DateTimeAssertor;
+import org.emw.assertion.datetime.DateTimeExpect;
 import org.emw.assertion.exception.AssertionGroupError;
 import org.emw.assertion.number.NumberAssertionGroup;
 import org.emw.assertion.number.NumberAssertor;
-import org.emw.assertion.number.NumberTo;
+import org.emw.assertion.number.NumberExpect;
 import org.emw.assertion.string.StringAssertionGroup;
 import org.emw.assertion.string.StringAssertor;
-import org.emw.assertion.string.StringTo;
+import org.emw.assertion.string.StringExpect;
+import org.emw.assertion.time.TimeAssertionGroup;
+import org.emw.assertion.time.TimeExpect;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -111,6 +118,7 @@ import java.util.List;
  * @see CollectionAssertor
  * @see DateAssertor
  * @see NumberAssertor
+ * @see DateTimeAssertor
  */
 public final class AssertionGroup {
     private final List<Throwable> throwables = new ArrayList<>();
@@ -144,6 +152,8 @@ public final class AssertionGroup {
         private final NumberAssertionGroup number;
         private final DateAssertionGroup date;
         private final BooleanAssertionGroup bool;
+        private final DateTimeAssertionGroup datetime;
+        private final TimeAssertionGroup time;
         private final AssertionGroup group;
 
         private Group(AssertionGroup group) {
@@ -153,103 +163,120 @@ public final class AssertionGroup {
             this.number = new NumberAssertionGroup(group);
             this.date = new DateAssertionGroup(group);
             this.bool = new BooleanAssertionGroup(group);
+            this.datetime = new DateTimeAssertionGroup(group);
+            this.time = new  TimeAssertionGroup(group);
         }
 
-        public StringTo expect(@Nullable String actual) {
+        public StringExpect expect(@Nullable String actual) {
             return expect("", actual);
         }
 
-        public StringTo expect(@NonNull String labelForActual, @Nullable String actual) {
+        public StringExpect expect(@NonNull String labelForActual, @Nullable String actual) {
             return string.expect(labelForActual, actual);
         }
 
-        public NumberTo expect(int actual) {
+        public NumberExpect expect(int actual) {
             return expect(Integer.valueOf(actual));
         }
 
-        public NumberTo expect(long actual) {
+        public NumberExpect expect(long actual) {
             return expect(Long.valueOf(actual));
         }
 
-        public NumberTo expect(float actual) {
+        public NumberExpect expect(float actual) {
             return expect(Float.valueOf(actual));
         }
 
-        public NumberTo expect(double actual) {
+        public NumberExpect expect(double actual) {
             return expect(Double.valueOf(actual));
         }
 
-        public NumberTo expect(@NonNull String labelForActual, int actual) {
+        public NumberExpect expect(@NonNull String labelForActual, int actual) {
             return expect(labelForActual, Integer.valueOf(actual));
         }
 
-        public NumberTo expect(@NonNull String labelForActual, long actual) {
+        public NumberExpect expect(@NonNull String labelForActual, long actual) {
             return expect(labelForActual, Long.valueOf(actual));
         }
 
-        public NumberTo expect(@NonNull String labelForActual, float actual) {
+        public NumberExpect expect(@NonNull String labelForActual, float actual) {
             return expect(labelForActual, Float.valueOf(actual));
         }
 
-        public NumberTo expect(@NonNull String labelForActual, double actual) {
+        public NumberExpect expect(@NonNull String labelForActual, double actual) {
             return expect(labelForActual, Double.valueOf(actual));
         }
 
-        public NumberTo expect(@NonNull Number actual) {
+        public NumberExpect expect(@NonNull Number actual) {
             return expect("", actual);
         }
 
-        public NumberTo expect(@NonNull String labelForActual, @NonNull Number actual) {
+        public NumberExpect expect(@NonNull String labelForActual, @NonNull Number actual) {
             return number.expect(labelForActual, actual);
         }
 
-
-        public DateTo expect(@NonNull Date actual) {
+        public DateExpect expect(@NonNull Date actual) {
             return expect("", actual.toLocalDate());
         }
 
-        public DateTo expect(@NonNull LocalDate actual) {
+        public DateExpect expect(@NonNull LocalDate actual) {
             return expect("", actual);
         }
 
-        public DateTo expect(@NonNull String labelForActual, @NonNull Date actual) {
+        public DateExpect expect(@NonNull String labelForActual, @NonNull Date actual) {
             return expect(labelForActual, actual.toLocalDate());
         }
 
-        public DateTo expect(@NonNull String labelForActual, @NonNull LocalDate actual) {
+        public DateExpect expect(@NonNull String labelForActual, @NonNull LocalDate actual) {
             return date.expect(labelForActual, actual);
         }
 
-        public CollectionTo expect(@NonNull Object[] actual) {
+        public CollectionExpect expect(@NonNull Object[] actual) {
             return expect("", actual);
         }
 
-        public CollectionTo expect(@NonNull String labelForActual, @NonNull Object[] actual) {
+        public CollectionExpect expect(@NonNull String labelForActual, @NonNull Object[] actual) {
             return collection.expect(labelForActual, actual);
         }
 
-        public CollectionTo expect(@NonNull Collection<?> actual) {
+        public CollectionExpect expect(@NonNull Collection<?> actual) {
             return expect("", actual);
         }
 
-        public CollectionTo expect(@NonNull String labelForActual, @NonNull Collection<?> actual) {
+        public CollectionExpect expect(@NonNull String labelForActual, @NonNull Collection<?> actual) {
             return collection.expect(labelForActual, actual);
         }
 
-        public BooleanTo expect(boolean actual) {
+        public BooleanExpect expect(boolean actual) {
             return expect("", actual);
         }
 
-        public BooleanTo expect(@NonNull String labelForActual, boolean actual) {
+        public BooleanExpect expect(@NonNull String labelForActual, boolean actual) {
             return bool.expect(labelForActual, actual);
         }
 
-        public BooleanTo expect(@Nullable Boolean actual) {
+        public BooleanExpect expect(@Nullable Boolean actual) {
             return expect("", actual);
         }
 
-        public BooleanTo expect(@NonNull String labelForActual, @Nullable Boolean actual) {
+        public BooleanExpect expect(@NonNull String labelForActual, @Nullable Boolean actual) {
             return bool.expect(labelForActual, actual);
+        }
+
+        public DateTimeExpect expect(@Nullable LocalDateTime actual) {
+            return expect("", actual);
+        }
+
+        public DateTimeExpect expect(@NonNull String labelForActual, @Nullable LocalDateTime actual) {
+            return datetime.expect(labelForActual, actual);
+        }
+
+        public TimeExpect expect(@Nullable LocalTime actual) {
+            return expect("", actual);
+        }
+
+        public TimeExpect expect(@NonNull String labelForActual, @Nullable LocalTime actual) {
+            return time.expect(labelForActual, actual);
         }
 
         public void assertWith(AnyAssertionAction action) {

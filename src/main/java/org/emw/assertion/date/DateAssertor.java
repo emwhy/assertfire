@@ -13,21 +13,23 @@ import java.time.LocalDate;
  * @see org.emw.assertion.string.StringAssertor
  * @see org.emw.assertion.number.NumberAssertor
  * @see org.emw.assertion.bool.BooleanAssertor
+ * @see org.emw.assertion.datetime.DateTimeAssertor
+ * @see org.emw.assertion.time.TimeAssertor
  */
 public interface DateAssertor {
-    default DateTo expect(@NonNull Date actual) {
-        return expect("", actual.toLocalDate());
+    default DateExpect expect(@NonNull Date actualDate) {
+        return expect("", actualDate.toLocalDate());
     }
 
-    default DateTo expect(@NonNull LocalDate actual) {
-        return expect("", actual);
+    default DateExpect expect(@NonNull LocalDate actualLocalDate) {
+        return expect("", actualLocalDate);
     }
 
-    default DateTo expect(@NonNull String labelForActual, @Nullable Date actual) {
-        return expect(labelForActual, actual == null ? null : actual.toLocalDate());
+    default DateExpect expect(@NonNull String labelForActual, @Nullable Date actualDate) {
+        return expect(labelForActual, actualDate == null ? null : actualDate.toLocalDate());
     }
 
-    default DateTo expect(@NonNull String labelForActual, @Nullable LocalDate actual) {
-        return new DateTo(null, labelForActual, actual, false);
+    default DateExpect expect(@NonNull String labelForActual, @Nullable LocalDate actualLocalDate) {
+        return new DateExpect(null, labelForActual, actualLocalDate, false);
     }
 }
