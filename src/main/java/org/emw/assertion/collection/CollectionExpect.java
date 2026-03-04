@@ -7,10 +7,10 @@ import org.emw.assertion.Connector;
 
 import java.util.Collection;
 
-public class CollectionTo extends Connector {
+public class CollectionExpect extends Connector {
     public final CollectionAllAssertionMethods to;
 
-    protected CollectionTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Collection<?> actual, boolean negated, boolean ignoreCase, boolean anyOrder) {
+    protected CollectionExpect(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Collection<?> actual, boolean negated, boolean ignoreCase, boolean anyOrder) {
         super(group, labelForActual);
         this.to = new CollectionAllAssertionMethods(group, labelForActual, actual, negated, ignoreCase, anyOrder);
     }

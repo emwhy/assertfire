@@ -84,7 +84,7 @@ public class DateTimeBeAssertionMethods extends AssertionMethods {
             if (actualLocalDateTime == null) {
                 return false;
             } else {
-                return actualLocalDateTime.isEqual(expected) || actualLocalDateTime.isBefore(expected);
+                return (actualLocalDateTime.isEqual(expected) || actualLocalDateTime.isBefore(expected)) != negated;
             }
         });
     }

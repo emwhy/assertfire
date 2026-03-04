@@ -13,13 +13,14 @@ import java.time.LocalDateTime;
  * @see org.emw.assertion.number.NumberAssertor
  * @see org.emw.assertion.bool.BooleanAssertor
  * @see org.emw.assertion.date.DateAssertor
+ * @see org.emw.assertion.time.TimeAssertor
  */
 public interface DateTimeAssertor {
-    default DateTimeTo expect(@NonNull LocalDateTime actualLocalDateTime) {
+    default DateTimeExpect expect(@NonNull LocalDateTime actualLocalDateTime) {
         return expect("", actualLocalDateTime);
     }
 
-    default DateTimeTo expect(@NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime) {
-        return new DateTimeTo(null, labelForActual, actualLocalDateTime, false);
+    default DateTimeExpect expect(@NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime) {
+        return new DateTimeExpect(null, labelForActual, actualLocalDateTime, false);
     }
 }

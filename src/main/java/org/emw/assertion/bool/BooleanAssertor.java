@@ -2,7 +2,6 @@ package org.emw.assertion.bool;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.emw.assertion.datetime.DateTimeAssertor;
 
 /**
  * A list of <strong>expect</strong> assertion methods for Boolean values.
@@ -11,22 +10,23 @@ import org.emw.assertion.datetime.DateTimeAssertor;
  * @see org.emw.assertion.string.StringAssertor
  * @see org.emw.assertion.number.NumberAssertor
  * @see org.emw.assertion.date.DateAssertor
- * @see DateTimeAssertor
+ * @see org.emw.assertion.datetime.DateTimeAssertor
+ * @see org.emw.assertion.time.TimeAssertor
  */
 public interface BooleanAssertor {
-    default BooleanTo expect(boolean actual) {
+    default BooleanExpect expect(boolean actual) {
         return expect("", actual);
     }
 
-    default BooleanTo expect(@NonNull String labelForActual, boolean actual) {
-        return new BooleanTo(null, labelForActual, actual, false);
+    default BooleanExpect expect(@NonNull String labelForActual, boolean actual) {
+        return new BooleanExpect(null, labelForActual, actual, false);
     }
 
-    default BooleanTo expect(@Nullable Boolean actual) {
+    default BooleanExpect expect(@Nullable Boolean actual) {
         return expect("", actual);
     }
 
-    default BooleanTo expect(@NonNull String labelForActual, @Nullable Boolean actual) {
-        return new BooleanTo(null, labelForActual, actual, false);
+    default BooleanExpect expect(@NonNull String labelForActual, @Nullable Boolean actual) {
+        return new BooleanExpect(null, labelForActual, actual, false);
     }
 }

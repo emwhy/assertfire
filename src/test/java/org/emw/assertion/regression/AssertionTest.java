@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class AssertionTest implements Assertor {
@@ -319,6 +320,38 @@ public class AssertionTest implements Assertor {
         expectError(() -> expect("Test 27", 100L).to.be.lessThan(50), "Expected actual value('100') of 'Test 27' to be less than '50'.");
         expectError(() -> expect("Test 28", 0.01f).to.be.moreThan(0.1), "Expected actual value('0.01') of 'Test 28' to be more than '0.1'.");
         expectError(() -> expect("Test 29", nullNumber).to.be.moreThan(0.1), "Expected actual value('null') of 'Test 29' to be more than '0.1'.");
+    }
+
+    @Test
+    public void testTime() {
+        final LocalTime testTime = LocalTime.of(11, 0, 0);
+        final LocalTime nullTime = null;
+
+        expect("Test 1", testTime).to.be(LocalTime.of(11, 0, 0));
+        expect("Test 2", testTime).to.not.be(LocalTime.of(12, 0, 0));
+        expect("Test 3", testTime).to.be.after(LocalTime.of(10, 0, 0));
+        expect("Test 4", testTime).to.not.be.after(LocalTime.of(12, 0, 0));
+        expect("Test 5", testTime).to.be.before(LocalTime.of(12, 0, 0));
+        expect("Test 6", testTime).to.not.be.before(LocalTime.of(10, 0, 0));
+        expect("Test 7", testTime).to.be.between(LocalTime.of(10, 0, 0), LocalTime.of(12, 0, 0));
+        expect("Test 8", testTime).to.be.sameOrAfter(LocalTime.of(11, 0, 0));
+        expect("Test 9", testTime).to.be.sameOrAfter(LocalTime.of(10, 0, 0));
+        expect("Test 10", testTime).to.be.sameOrBefore(LocalTime.of(11, 0, 0));
+        expect("Test 11", testTime).to.be.sameOrBefore(LocalTime.of(12, 0, 0));
+        expect("Test 12", nullTime).to.be.nullValue();
+
+        expectError(() -> expect("Test 13", testTime).to.not.be(LocalTime.of(11, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 13' not to be '11:00:00.000'.");
+        expectError(() -> expect("Test 14", testTime).to.be(LocalTime.of(12, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 14' to be '12:00:00.000'.");
+        expectError(() -> expect("Test 15", testTime).to.not.be.after(LocalTime.of(10, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 15' not to be after '10:00:00.000'.");
+        expectError(() -> expect("Test 16", testTime).to.be.after(LocalTime.of(12, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 16' to be after '12:00:00.000'.");
+        expectError(() -> expect("Test 17", testTime).to.not.be.before(LocalTime.of(12, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 17' not to be before '12:00:00.000'.");
+        expectError(() -> expect("Test 18", testTime).to.be.before(LocalTime.of(10, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 18' to be before '10:00:00.000'.");
+        expectError(() -> expect("Test 19", testTime).to.not.be.between(LocalTime.of(10, 0, 0), LocalTime.of(12, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 19' not to be between '10:00:00.000' and '12:00:00.000'.");
+        expectError(() -> expect("Test 20", testTime).to.not.be.sameOrAfter(LocalTime.of(11, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 20' not to be the same or after '11:00:00.000'.");
+        expectError(() -> expect("Test 21", testTime).to.not.be.sameOrAfter(LocalTime.of(10, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 21' not to be the same or after '10:00:00.000'.");
+        expectError(() -> expect("Test 22", testTime).to.not.be.sameOrBefore(LocalTime.of(11, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 22' not to be the same or before '11:00:00.000'.");
+        expectError(() -> expect("Test 23", testTime).to.not.be.sameOrBefore(LocalTime.of(12, 0, 0)), "Expected actual value('11:00:00.000') of 'Test 23' not to be the same or before '12:00:00.000'.");
+        expectError(() -> expect("Test 24", nullTime).to.not.be.nullValue(), "Expected actual value('null') of 'Test 24' not to be null.");
     }
 
     @Test

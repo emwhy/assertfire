@@ -11,11 +11,11 @@ public final class StringAssertionGroup {
         this.group = group;
     }
 
-    public StringTo expect(@Nullable String actual) {
+    public StringExpect expect(@Nullable String actual) {
         return expect("", actual);
     }
 
-    public StringTo expect(@NonNull String labelForActual, @Nullable String actual) {
-        return new StringTo(group, labelForActual, actual, false, false);
+    public StringExpect expect(@NonNull String labelForActual, @Nullable String actual) {
+        return new StringExpect(group, labelForActual, actual, false, false);
     }
 }

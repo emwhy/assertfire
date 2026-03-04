@@ -7,10 +7,10 @@ import org.emw.assertion.Connector;
 
 import java.time.LocalDateTime;
 
-public class DateTimeTo extends Connector {
+public class DateTimeExpect extends Connector {
     public final DateTimeNotBeAssertionMethods to;
 
-    protected DateTimeTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime, boolean negated) {
+    protected DateTimeExpect(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime, boolean negated) {
         super(group, labelForActual);
         this.to = new DateTimeNotBeAssertionMethods(group, labelForActual, actualLocalDateTime, negated);
     }

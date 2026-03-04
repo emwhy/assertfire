@@ -13,11 +13,11 @@ public final class DateTimeAssertionGroup {
         this.group = group;
     }
 
-    public DateTimeTo expect(@Nullable LocalDateTime actualLocalDateTime) {
+    public DateTimeExpect expect(@Nullable LocalDateTime actualLocalDateTime) {
         return expect("", actualLocalDateTime);
     }
 
-    public DateTimeTo expect(@NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime) {
-        return new DateTimeTo(group, labelForActual, actualLocalDateTime, false);
+    public DateTimeExpect expect(@NonNull String labelForActual, @Nullable LocalDateTime actualLocalDateTime) {
+        return new DateTimeExpect(group, labelForActual, actualLocalDateTime, false);
     }
 }

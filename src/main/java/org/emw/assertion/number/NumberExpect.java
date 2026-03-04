@@ -5,10 +5,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emw.assertion.AssertionGroup;
 import org.emw.assertion.Connector;
 
-public class NumberTo extends Connector {
+public class NumberExpect extends Connector {
     public final NumberAllAssertionMethods to;
 
-    protected NumberTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Number actual, boolean negated) {
+    protected NumberExpect(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Number actual, boolean negated) {
         super(group, labelForActual);
         this.to = new NumberAllAssertionMethods(group, labelForActual, actual, negated);
     }

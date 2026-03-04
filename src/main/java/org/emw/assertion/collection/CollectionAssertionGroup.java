@@ -14,19 +14,19 @@ public final class CollectionAssertionGroup {
         this.group = group;
     }
 
-    public CollectionTo expect(@Nullable Object[] actual) {
+    public CollectionExpect expect(@Nullable Object[] actual) {
         return expect("", actual);
     }
 
-    public CollectionTo expect(@NonNull String labelForActual, @Nullable Object[] actual) {
-        return new CollectionTo(group, labelForActual, actual == null ? null : Arrays.stream(actual).toList(), false, false, false);
+    public CollectionExpect expect(@NonNull String labelForActual, @Nullable Object[] actual) {
+        return new CollectionExpect(group, labelForActual, actual == null ? null : Arrays.stream(actual).toList(), false, false, false);
     }
 
-    public CollectionTo expect(@Nullable Collection<?> actual) {
+    public CollectionExpect expect(@Nullable Collection<?> actual) {
         return expect("", actual);
     }
 
-    public CollectionTo expect(@NonNull String labelForActual, @Nullable Collection<?> actual) {
-        return new CollectionTo(group, labelForActual, actual, false, false, false);
+    public CollectionExpect expect(@NonNull String labelForActual, @Nullable Collection<?> actual) {
+        return new CollectionExpect(group, labelForActual, actual, false, false, false);
     }
 }

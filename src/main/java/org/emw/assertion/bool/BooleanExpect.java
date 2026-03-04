@@ -5,10 +5,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emw.assertion.AssertionGroup;
 import org.emw.assertion.Connector;
 
-public class BooleanTo extends Connector {
+public class BooleanExpect extends Connector {
     public final BooleanNotBe to;
 
-    protected BooleanTo(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Boolean actual, boolean negated) {
+    protected BooleanExpect(@Nullable AssertionGroup group, @NonNull String labelForActual, @Nullable Boolean actual, boolean negated) {
         super(group, labelForActual);
         this.to = new BooleanNotBe(group, labelForActual, actual, negated);
     }

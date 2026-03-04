@@ -14,19 +14,19 @@ public final class DateAssertionGroup {
         this.group = group;
     }
 
-    public DateTo expect(@Nullable Date actualDate) {
+    public DateExpect expect(@Nullable Date actualDate) {
         return expect("", actualDate == null ? null : actualDate.toLocalDate());
     }
 
-    public DateTo expect(@Nullable LocalDate actualLocalDate) {
+    public DateExpect expect(@Nullable LocalDate actualLocalDate) {
         return expect("", actualLocalDate);
     }
 
-    public DateTo expect(@NonNull String labelForActual, @Nullable Date actualDate) {
+    public DateExpect expect(@NonNull String labelForActual, @Nullable Date actualDate) {
         return expect(labelForActual, actualDate == null ? null : actualDate.toLocalDate());
     }
 
-    public DateTo expect(@NonNull String labelForActual, @Nullable LocalDate actualLocalDate) {
-        return new DateTo(group, labelForActual, actualLocalDate, false);
+    public DateExpect expect(@NonNull String labelForActual, @Nullable LocalDate actualLocalDate) {
+        return new DateExpect(group, labelForActual, actualLocalDate, false);
     }
 }
