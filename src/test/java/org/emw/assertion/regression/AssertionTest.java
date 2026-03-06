@@ -105,14 +105,14 @@ public class AssertionTest implements Assertor {
         expect("Test 10", new String[] { "test1", "test2" }).to.not.be.empty();
         expect("Test 11", emptyArray).to.not.be.nullValue();
 
-        expectError(() -> expect("Test 12", new String[] { "test1", "test2" }).to.be("Test1", "test2"), "Expected actual value('test1, test2') of 'Test 12' to be same as 'Test1, test2'.");
-        expectError(() -> expect("Test 13", new String[] { "test1", "test2" }).to.not.be("test1", "test2"), "Expected actual value('test1, test2') of 'Test 13' not to be same as 'test1, test2'.");
-        expectError(() -> expect("Test 14", new String[] { "test1", "test2" }).to.inAnyOrder.be("Test2", "test1"), "Expected actual value('test1, test2') of 'Test 14' to be same (in any order) as 'Test2, test1'.");
-        expectError(() -> expect("Test 15", new String[] { "test1", "test2" }).to.have("Test2"), "Expected actual value('test1, test2') of 'Test 15' to be same (in any order) as 'Test2'.");
-        expectError(() -> expect("Test 16", new String[] { "test1", "test2" }).to.have("test1", "test2", "test3"), "Expected actual value('test1, test2') of 'Test 16' to be same (in any order) as 'test1, test2, test3'.");
-        expectError(() -> expect("Test 17", new String[] { "test1", "test2" }).to.haveSizeOf(1), "Expected actual value('test1, test2') of 'Test 17' to have size of 1, but was 2.");
-        expectError(() -> expect("Test 18", new String[] { "test1", "test2" }).to.be.empty(), "Expected actual value('test1, test2') of 'Test 18' to be empty.");
-        expectError(() -> expect("Test 19", new String[] { "test1", "test2" }).to.be.nullValue(), "Expected actual value('test1, test2') of 'Test 19' to be null.");
+        expectError(() -> expect("Test 12", new String[] { "test1", "test2" }).to.be("Test1", "test2"), "Expected actual value('test1', 'test2') of 'Test 12' to be same as 'Test1', 'test2'.");
+        expectError(() -> expect("Test 13", new String[] { "test1", "test2" }).to.not.be("test1", "test2"), "Expected actual value('test1', 'test2') of 'Test 13' not to be same as 'test1', 'test2'.");
+        expectError(() -> expect("Test 14", new String[] { "test1", "test2" }).to.inAnyOrder.be("Test2", "test1"), "Expected actual value('test1', 'test2') of 'Test 14' to be same (in any order) as 'Test2', 'test1'.");
+        expectError(() -> expect("Test 15", new String[] { "test1", "test2" }).to.have("Test2"), "Expected actual value('test1', 'test2') of 'Test 15' to have 'Test2'.");
+        expectError(() -> expect("Test 16", new String[] { "test1", "test2" }).to.have("test1", "test2", "test3"), "Expected actual value('test1', 'test2') of 'Test 16' to have 'test1', 'test2', 'test3'.");
+        expectError(() -> expect("Test 17", new String[] { "test1", "test2" }).to.haveSizeOf(1), "Expected actual value('test1', 'test2') of 'Test 17' to have size of 1, but was 2.");
+        expectError(() -> expect("Test 18", new String[] { "test1", "test2" }).to.be.empty(), "Expected actual value('test1', 'test2') of 'Test 18' to be empty.");
+        expectError(() -> expect("Test 19", new String[] { "test1", "test2" }).to.be.nullValue(), "Expected actual value('test1', 'test2') of 'Test 19' to be null.");
     }
 
     @Test
