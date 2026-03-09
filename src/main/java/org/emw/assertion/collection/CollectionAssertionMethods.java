@@ -84,19 +84,11 @@ public class CollectionAssertionMethods extends AssertionMethods {
         }
     }
 
-    public void haveSizeOf(int expectedSize) {
-        assertCondition(() -> {
-            if (actualCollection == null || (actualCollection.size() == expectedSize) == negated) {
-                throw new AssertionError(helper.assertionErrorMessage("to have size of " + expectedSize + ", but was " + (actualCollection == null ? "null collection" : actualCollection.size())));
-            }
-        });
+    public void contain(Object... expected) {
+        this.contain(Arrays.asList(expected));
     }
 
-    public void have(Object... expected) {
-        this.have(Arrays.asList(expected));
-    }
-
-    public void have(Collection<?> expectedCollection) {
+    public void contain(Collection<?> expectedCollection) {
         assertCondition(() -> {
             final String message = helper.assertionErrorMessage("to have " + helper.join(expectedCollection));
 

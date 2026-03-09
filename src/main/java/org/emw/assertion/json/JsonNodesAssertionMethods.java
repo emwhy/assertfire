@@ -9,8 +9,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class JsonNodesAssertionMethods extends AssertionMethods {
     public final JsonNodesBeAssertionMethods be;
@@ -41,17 +41,17 @@ public class JsonNodesAssertionMethods extends AssertionMethods {
             } else if (this.jsonArray.length() != expectedCollection.size()) {
                 throw new AssertionError("Expected Json array size does not match with the actual size.");
             } else if (this.inAnyOrder) {
-                final List<Object> expectedList = new ArrayList<>(expectedCollection).stream().map(this::jsonMapper).sorted(new JsonComparator()).toList();
+                final List<Object> expectedList = new ArrayList<>(expectedCollection).stream().map(JsonHelper::jsonMapper).sorted(new JsonHelper.JsonComparator()).toList();
 
                 final JsonCollectionAssertor assertor = new JsonCollectionAssertor();
 
                 if (expectedList.stream().allMatch(o -> o instanceof JSONArray || o instanceof JSONObject)) {
-                    final List<Object> list = new ArrayList<>(this.jsonArray.toList()).stream().sorted(new JsonComparator()).toList();
+                    final List<Object> list = new ArrayList<>(this.jsonArray.toList()).stream().sorted(new JsonHelper.JsonComparator()).toList();
                     final JSONArray jArray = new JSONArray(list);
 
                     for (int i = 0; i < list.size(); i++) {
                         final @NonNull Object expected = expectedList.get(i) == null ? ""  : expectedList.get(i);
-                        final String errorMessage = JsonHelper.jsonMatched(jArray.get(i), expected, this.excludedNodes, this.ignoreCase);
+                        final String errorMessage = JsonHelper.matchJson(jArray.get(i), expected, this.excludedNodes, this.ignoreCase);
 
                         if (!errorMessage.isEmpty()) {
                             if (negated) {
@@ -70,13 +70,13 @@ public class JsonNodesAssertionMethods extends AssertionMethods {
                     assertor.expect("Json Array", jsonArray.toList()).to.inAnyOrder.allMatch(expectedList);
                 }
             } else {
-                final List<Object> expectedList = expectedCollection.stream().map(this::jsonMapper).toList();
+                final List<Object> expectedList = expectedCollection.stream().map(JsonHelper::jsonMapper).toList();
                 final JsonCollectionAssertor assertor = new JsonCollectionAssertor();
 
                 if (expectedList.stream().allMatch(o -> o instanceof JSONArray || o instanceof JSONObject)) {
                     for (int i = 0; i < this.jsonArray.length(); i++) {
                         final @NonNull Object expected = expectedList.get(i) == null ? ""  : expectedList.get(i);
-                        final String errorMessage = JsonHelper.jsonMatched(this.jsonArray.get(i), expected, this.excludedNodes, this.ignoreCase);
+                        final String errorMessage = JsonHelper.matchJson(this.jsonArray.get(i), expected, this.excludedNodes, this.ignoreCase);
 
                         if (!errorMessage.isEmpty()) {
                             if (negated) {
@@ -106,7 +106,7 @@ public class JsonNodesAssertionMethods extends AssertionMethods {
             if (this.jsonArray == null) {
                 throw new AssertionError("Node does not exist.");
             } else if (expectedObject instanceof JSONArray) {
-                final String errorMessage = JsonHelper.jsonMatched(this.jsonArray, expectedObject, this.excludedNodes, this.ignoreCase);
+                final String errorMessage = JsonHelper.matchJson(this.jsonArray, expectedObject, this.excludedNodes, this.ignoreCase);
 
                 if (negated) {
                     if (errorMessage.isEmpty()) {
@@ -125,79 +125,77 @@ public class JsonNodesAssertionMethods extends AssertionMethods {
         });
     }
 
-    public void containJson(@NonNull String containedJsonText) {
+    public void findJson(@NonNull String containedJsonText) {
         if (JsonHelper.isJson(containedJsonText)) {
-            containJson(new JSONObject(containedJsonText));
+            findJson(new JSONObject(containedJsonText));
         } else if (JsonHelper.isJsonArray(containedJsonText)) {
-            containJson(new JSONArray(containedJsonText));
+            findJson(new JSONArray(containedJsonText));
         } else {
             throw new AssertionError("Not Json.");
         }
     }
 
-    public void containJson(@NonNull JSONObject containedJson) {
+    public void findJson(@NonNull JSONObject containedJson) {
         assertCondition(() -> {
             if (this.jsonArray == null) {
                 throw new AssertionError("Node does not exist.");
-            } else if (JsonHelper.containsJson(this.jsonArray, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
+            } else if (JsonHelper.findJson(this.jsonArray, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
                 throw new AssertionError("Expected the actual Json data to contain the expected Json data.");
             }
         });
     }
 
-    public void containJson(@NonNull JSONArray containedJson) {
+    public void findJson(@NonNull JSONArray containedJson) {
         assertCondition(() -> {
             if (this.jsonArray == null) {
                 throw new AssertionError("Node does not exist.");
-            } else if (JsonHelper.containsJson(this.jsonArray, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
+            } else if (JsonHelper.findJson(this.jsonArray, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
                 throw new AssertionError("Expected the actual Json data to contain the expected Json data.");
             }
         });
     }
 
-    public void haveSizeOf(int expectedSize) {
+    public void contain(@NonNull Object... expectedArray) {
+        contain(List.of(expectedArray));
+    }
+
+    public void contain(@NonNull Collection<?> expectedCollection) {
         assertCondition(() -> {
             if (this.jsonArray == null) {
                 throw new AssertionError("Node does not exist.");
             } else {
-                if (negated) {
-                    if (expectedSize == this.jsonArray.length()) {
-                        throw new AssertionError("Expected Json array size to not be equal to Json array size.");
+                final List<Object> expectedList = expectedCollection.stream().map(JsonHelper::jsonMapper).toList();
+                final JsonCollectionAssertor assertor = new JsonCollectionAssertor();
+                int foundCount = 0;
+
+                if (expectedList.stream().allMatch(o -> o instanceof JSONArray || o instanceof JSONObject)) {
+                    for (Object expected : expectedList) {
+                        final boolean found = StreamSupport.stream(jsonArray.spliterator(), false).anyMatch(o -> JsonHelper.matchJson(o, expected, this.excludedNodes, this.ignoreCase).isEmpty());
+
+                        if (found) {
+                            foundCount++;
+                        }
                     }
+
+                    if (negated) {
+                        if (foundCount == expectedList.size()) {
+                            throw new AssertionError("Expected Json array to not have expected Json data, but it does.");
+                        }
+                    } else {
+                        if (foundCount != expectedList.size()) {
+                            throw new AssertionError("Expected Json array to have expected Json data, but it does not.");
+                        }
+                    }
+                } else if (ignoreCase){
+                    assertor.expect("Json Array", jsonArray.toList()).to.caseInsensitively.contain(expectedList);
                 } else {
-                    if (expectedSize != this.jsonArray.length()) {
-                        throw new AssertionError("Expected Json array size to be equal to Json array size.");
-                    }
+                    assertor.expect("Json Array", jsonArray.toList()).to.contain(expectedList);
                 }
             }
+
         });
     }
 
-    private @NonNull Object jsonMapper(@Nullable Object obj) {
-        if (obj == null) {
-            return "";
-        } else if (obj instanceof JSONArray || obj instanceof JSONObject || obj instanceof Number) {
-            return obj;
-        } else if (obj instanceof String) {
-            final String s = String.valueOf(obj);
-            if (JsonHelper.isJson(s)) {
-                return new JSONObject(s);
-            } else if (JsonHelper.isJsonArray(s)) {
-                return new JSONArray(s);
-            } else {
-                return s;
-            }
-        } else {
-            throw new AssertionError("Invalid types in parameters.");
-        }
-    }
-
-    private class JsonComparator implements Comparator<Object> {
-        @Override
-        public int compare(Object o1, Object o2) {
-            return o1.toString().compareTo(o2.toString());
-        }
-    }
 
     private class JsonCollectionAssertor implements CollectionAssertor {
         private JsonCollectionAssertor() {}

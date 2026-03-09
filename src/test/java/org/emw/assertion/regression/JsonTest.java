@@ -8,14 +8,6 @@ import org.testng.annotations.Test;
 import java.util.*;
 
 public class JsonTest implements JsonAssertor {
-    @Test
-    public void testJsonSyntax() {
-        assertJson("").expect(json -> {
-
-        });
-    }
-
-
 /*
 
 assertJson(json).expect(json -> {
@@ -230,19 +222,19 @@ assertJson(json).expect(json -> {
             jsonNodes.last().nodes("/grades").first().node("/score").to.be.number.lessThan(88);
             jsonNodes.to.be(testJson);
             jsonNodes.to.not.be("['test']");
-            jsonNodes.to.containJson("""
+            jsonNodes.to.findJson("""
                 [
                     { "exam": "Midterm", "score": 75 },
                     { "exam": "Final", "score": 81 }
                 ]
                 """);
-            jsonNodes.to.not.containJson("""
+            jsonNodes.to.not.findJson("""
                 [
                     { "exam": "Midterm", "score": 750 },
                     { "exam": "Final", "score": 81 }
                 ]
                 """);
-            jsonNodes.to.caseInsensitively.containJson("""
+            jsonNodes.to.caseInsensitively.findJson("""
                 [
                     { "exam": "midterm", "score": 75 },
                     { "exam": "final", "score": 81 }
@@ -310,7 +302,59 @@ assertJson(json).expect(json -> {
                       ]
                     }
                     """);
+            jsonNodes.to.excluding("/rooms").excluding("/numbers").contain("""
+                    {
+                      "id": "ST-002",
+                      "name": "Bob Johnson",
+                      "grades": [
+                        { "exam": "Midterm", "score": 75 },
+                        { "exam": "Final", "score": 81 }
+                      ]
+                    }
+                    """);
+            jsonNodes.to.excluding("/rooms").excluding("/numbers").contain("""
+                    {
+                      "id": "ST-002",
+                      "name": "Bob Johnson",
+                      "grades": [
+                        { "exam": "Midterm", "score": 75 },
+                        { "exam": "Final", "score": 81 }
+                      ]
+                    }
+                    """, """
+                    {
+                      "id": "ST-001",
+                      "name": "Alice Smith",
+                      "grades": [
+                        { "exam": "Midterm", "score": 88 },
+                        { "exam": "Final", "score": 92 }
+                      ]
+                    }
+                    """);
+            jsonNodes.to.excluding("/rooms").excluding("/numbers").not.contain("""
+                    {
+                      "id": "ST-002",
+                      "name": "Bob Johnson Test",
+                      "grades": [
+                        { "exam": "Midterm", "score": 75 },
+                        { "exam": "Final", "score": 81 }
+                      ]
+                    }
+                    """, """
+                    {
+                      "id": "ST-001",
+                      "name": "Alice Smith",
+                      "grades": [
+                        { "exam": "Midterm", "score": 88 },
+                        { "exam": "Final", "score": 92 }
+                      ]
+                    }
+                    """);
+            jsonNodes.first().nodes("/rooms").to.contain("room1-2", "room1-3");
+            jsonNodes.to.be.sizeOf(2);
+            jsonNodes.to.not.be.empty();
         });
+        assertJsonArray("[]").expect(jsonNodes -> jsonNodes.to.be.empty());
     }
 
     public static Map<String, Object> getPointerValueMap(String jsonText) {

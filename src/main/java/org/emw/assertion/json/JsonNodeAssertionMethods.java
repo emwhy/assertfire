@@ -32,7 +32,7 @@ public class JsonNodeAssertionMethods extends AssertionMethods {
             if (this.obj == null) {
                 throw new AssertionError("Node does not exist.");
             } else if (expectedObject instanceof JSONObject && this.obj instanceof JSONObject) {
-                final String errorMessage = JsonHelper.jsonMatched((JSONObject) this.obj, (JSONObject) expectedObject, this.excludedNodes, this.ignoreCase);
+                final String errorMessage = JsonHelper.matchJson((JSONObject) this.obj, (JSONObject) expectedObject, this.excludedNodes, this.ignoreCase);
 
                 if (negated) {
                     if (errorMessage.isEmpty()) {
@@ -83,7 +83,7 @@ public class JsonNodeAssertionMethods extends AssertionMethods {
         assertCondition(() -> {
             if (this.obj == null) {
                 throw new AssertionError("Node does not exist.");
-            } else if (JsonHelper.containsJson(this.obj, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
+            } else if (JsonHelper.findJson(this.obj, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
                 throw new AssertionError("Expected the actual Json data to contain the expected Json data.");
             }
         });
@@ -93,7 +93,7 @@ public class JsonNodeAssertionMethods extends AssertionMethods {
         assertCondition(() -> {
             if (this.obj == null) {
                 throw new AssertionError("Node does not exist.");
-            } else if (JsonHelper.containsJson(this.obj, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
+            } else if (JsonHelper.findJson(this.obj, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
                 throw new AssertionError("Expected the actual Json data to contain the expected Json data.");
             }
         });

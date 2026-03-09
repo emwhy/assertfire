@@ -32,4 +32,14 @@ public final class CollectionBeAssertionMethods extends AssertionMethods {
             }
         });
     }
+
+    public void sizeOf(int expectedSize) {
+        assertCondition(() -> {
+            if (actualCollection == null || (actualCollection.size() == expectedSize) == negated) {
+                throw new AssertionError(helper.assertionErrorMessage("to have size of " + expectedSize + ", but was " + (actualCollection == null ? "null collection" : actualCollection.size())));
+            }
+        });
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package org.emw.assertion.json;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,13 +27,13 @@ final class JsonHelper {
         }
     }
 
-    static boolean containsJson(@NonNull Object json, @NonNull Object expectedJson, List<String> excludedNodes, boolean ignoreCase) {
+    static boolean findJson(@NonNull Object json, @NonNull Object expectedJson, List<String> excludedNodes, boolean ignoreCase) {
         final Map<String, Object> actual = getPointerValueMap(removeByJsonPointer(json, excludedNodes));
         final Object containedJson = removeByJsonPointer(expectedJson, excludedNodes);
 
         for (Object value : actual.values()) {
             if (value instanceof JSONObject || value instanceof JSONArray) {
-                if (jsonMatched(value, containedJson, List.of(), ignoreCase).isEmpty()) {
+                if (matchJson(value, containedJson, List.of(), ignoreCase).isEmpty()) {
                     return true;
                 }
             }
@@ -40,7 +41,7 @@ final class JsonHelper {
         return false;
     }
 
-    static String jsonMatched(@NonNull Object json, @NonNull Object expectedJson, List<String> excludedNodes, boolean ignoreCase) {
+    static String matchJson(@NonNull Object json, @NonNull Object expectedJson, List<String> excludedNodes, boolean ignoreCase) {
         if ((json instanceof JSONObject || json instanceof JSONArray) && (expectedJson instanceof JSONObject || expectedJson instanceof JSONArray)) {
             final Map<String, Object> actual = getPointerValueMap(removeByJsonPointer(json, excludedNodes));
             final Map<String, Object> expected = getPointerValueMap(removeByJsonPointer(expectedJson, excludedNodes));
@@ -182,4 +183,31 @@ final class JsonHelper {
             }
         }
     }
+
+    static @NonNull Object jsonMapper(@Nullable Object obj) {
+        if (obj == null) {
+            return "";
+        } else if (obj instanceof JSONArray || obj instanceof JSONObject || obj instanceof Number) {
+            return obj;
+        } else if (obj instanceof String) {
+            final String s = String.valueOf(obj);
+            if (JsonHelper.isJson(s)) {
+                return new JSONObject(s);
+            } else if (JsonHelper.isJsonArray(s)) {
+                return new JSONArray(s);
+            } else {
+                return s;
+            }
+        } else {
+            throw new AssertionError("Invalid types in parameters.");
+        }
+    }
+
+    static class JsonComparator implements Comparator<Object> {
+        @Override
+        public int compare(Object o1, Object o2) {
+            return o1.toString().compareTo(o2.toString());
+        }
+    }
+
 }
