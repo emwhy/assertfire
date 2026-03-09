@@ -2,11 +2,8 @@ package org.emw.assertion.json;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.emw.assertion.AssertionGroup;
-import org.emw.assertion.collection.CollectionAssertionMethods;
 import org.json.JSONArray;
 
-import java.util.Collection;
 import java.util.List;
 
 public class JsonNodesAnyOrderAssertionMethods extends JsonNodesAssertionMethods {

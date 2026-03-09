@@ -1,14 +1,12 @@
 package org.emw.assertion.regression;
 
 import org.emw.assertion.json.JsonAssertor;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
 
 public class JsonTest implements JsonAssertor {
     @Test
