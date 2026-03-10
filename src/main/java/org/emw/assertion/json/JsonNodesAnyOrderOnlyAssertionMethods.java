@@ -9,13 +9,13 @@ import java.util.List;
 public class JsonNodesAnyOrderOnlyAssertionMethods extends JsonNodesAssertionMethods {
     public final JsonNodesAssertionMethods inAnyOrder;
 
-    JsonNodesAnyOrderOnlyAssertionMethods(@Nullable JSONArray actual, boolean negated, boolean ignoreCase, boolean anyOrder, @NonNull List<String> excludedNodes) {
-        super(actual, negated, ignoreCase, anyOrder, excludedNodes);
-        this.inAnyOrder = new JsonNodesAssertionMethods(actual, negated, ignoreCase, true, excludedNodes);
+    JsonNodesAnyOrderOnlyAssertionMethods(@NonNull JsonAssertionGroup group, @Nullable JSONArray actual, boolean negated, boolean ignoreCase, boolean anyOrder, @NonNull List<String> excludedNodes) {
+        super(group, actual, negated, ignoreCase, anyOrder, excludedNodes);
+        this.inAnyOrder = new JsonNodesAssertionMethods(group, actual, negated, ignoreCase, true, excludedNodes);
     }
 
     public JsonNodesAnyOrderOnlyAssertionMethods excluding(@NonNull String jsonPointer) {
-        this.excludedNodes.add(jsonPointer);
+        this.addExcludedNode(jsonPointer);
         return this;
     }
 

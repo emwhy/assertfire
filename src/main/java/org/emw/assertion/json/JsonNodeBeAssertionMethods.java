@@ -2,13 +2,13 @@ package org.emw.assertion.json;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.emw.assertion.AssertionMethods;
 import org.emw.assertion.bool.BooleanAssertor;
 import org.emw.assertion.date.DateAssertor;
 import org.emw.assertion.datetime.DateTimeAssertor;
 import org.emw.assertion.number.NumberAssertor;
 import org.emw.assertion.string.StringAssertor;
 import org.emw.assertion.time.TimeAssertor;
+import org.json.JSONException;
 
 import java.sql.Date;
 import java.time.*;
@@ -16,12 +16,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAccessor;
+import java.util.List;
 import java.util.Locale;
 
-public class JsonNodeBeAssertionMethods extends AssertionMethods {
-    private final @Nullable Object obj;
-    private final boolean negated;
-    private final boolean ignoreCase;
+public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
     public final JsonStringAssertions string;
     public final JsonNumberAssertions number;
     public final JsonBooleanAssertions bool;
@@ -29,86 +27,88 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
     public final JsonDateTimeAssertions dateTime;
     public final JsonTimeAssertions time;
 
-    protected JsonNodeBeAssertionMethods(@Nullable Object obj, boolean negated, boolean ignoreCase) {
-        super(null, "", negated, ignoreCase);
-        this.obj = obj;
-        this.negated = negated;
-        this.ignoreCase = ignoreCase;
-        this.string = new JsonStringAssertions(this.obj);
-        this.number = new JsonNumberAssertions(this.obj);
-        this.bool = new JsonBooleanAssertions(this.obj);
-        this.date = new JsonDateAssertions(this.obj);
-        this.dateTime = new JsonDateTimeAssertions(this.obj);
-        this.time = new JsonTimeAssertions(this.obj);
+    protected JsonNodeBeAssertionMethods(@NonNull JsonAssertionGroup group, @Nullable Object object, boolean negated, boolean ignoreCase) {
+        super(group, object, negated, ignoreCase, false, List.of());
+
+        if (object == null) {
+            throw new JSONException("Node does not exist at the pointer.");
+        } else {
+            this.string = new JsonStringAssertions(object);
+            this.number = new JsonNumberAssertions(object);
+            this.bool = new JsonBooleanAssertions(object);
+            this.date = new JsonDateAssertions(object);
+            this.dateTime = new JsonDateTimeAssertions(object);
+            this.time = new JsonTimeAssertions(object);
+        }
     }
 
     public void nullValue() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (String.valueOf(obj).equals("null")) {
-                    throw new AssertionError("Node is null.");
+            final Object object = this.object();
+
+            if (negated) {
+                if (String.valueOf(object).equals("null")) {
+                    throw new AssertionError("Expected node to not be null.");
                 }
-            } else if (!String.valueOf(obj).equals("null")) {
-                throw new AssertionError("Node is not null.");
+            } else if (!String.valueOf(object).equals("null")) {
+                throw new AssertionError("Expected node to be null.");
             }
         });
     }
 
     public void stringType() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (this.obj instanceof String) {
-                    throw new AssertionError("Node is a string.");
+            final Object object = this.object();
+
+            if (negated) {
+                if (object instanceof String) {
+                    throw new AssertionError("Expected node to not be a type of string.");
                 }
-            } else if (!(this.obj instanceof String)) {
-                throw new AssertionError("Node is not a string.");
+            } else if (!(object instanceof String)) {
+                throw new AssertionError("Expected node to be a type of string.");
             }
         });
     }
 
     public void numberType() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (this.obj instanceof Number) {
-                    throw new AssertionError("Node is a number.");
+            final Object object = this.object();
+
+            if (negated) {
+                if (object instanceof Number) {
+                    throw new AssertionError("Expected node to not be a type of number.");
                 }
-            } else if (!(this.obj instanceof Number)) {
-                throw new AssertionError("Node is not a number.");
+            } else if (!(object instanceof Number)) {
+                throw new AssertionError("Expected node to be a type of number.");
             }
         });
     }
 
     public void booleanType() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (String.valueOf(obj).equals("true") || String.valueOf(obj).equals("false")) {
-                    throw new AssertionError("Node is a boolean.");
+            final Object object = this.object();
+
+            if (negated) {
+                if (String.valueOf(object).equals("true") || String.valueOf(object).equals("false")) {
+                    throw new AssertionError("Expected node to not be a type of boolean.");
                 }
-            } else if (!String.valueOf(obj).equals("true") && !String.valueOf(obj).equals("false")) {
-                throw new AssertionError("Node is not a boolean.");
+            } else if (!String.valueOf(object).equals("true") && !String.valueOf(object).equals("false")) {
+                throw new AssertionError("Expected node to be a type of boolean.");
             }
         });
     }
 
     public void dateType() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (JsonDateAssertions.isDate(this.obj)) {
-                    throw new AssertionError("Node is a recognized date: " + this.obj);
+            final Object object = this.object();
+
+            if (negated) {
+                if (JsonDateAssertions.isDate(object)) {
+                    throw new AssertionError("Expected node to not be a type of date: " + object);
                 }
             } else {
-                if (!JsonDateAssertions.isDate(this.obj)) {
-                    throw new AssertionError("Node is not a recognized date: " + this.obj);
+                if (!JsonDateAssertions.isDate(object)) {
+                    throw new AssertionError("Expected node is a type of date: " + object);
                 }
             }
         });
@@ -116,15 +116,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
 
     public void dateType(@NonNull String format) {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (JsonDateAssertions.isDate(this.obj, DateTimeFormatter.ofPattern(format))) {
-                    throw new AssertionError("Node is a date of specified format: " + this.obj + ", format: " + format);
+            final Object object = this.object();
+
+            if (negated) {
+                if (JsonDateAssertions.isDate(object, DateTimeFormatter.ofPattern(format))) {
+                    throw new AssertionError("Expected node to not be a type of date of specified format: " + object + ", format: " + format);
                 }
             } else {
-                if (!JsonDateAssertions.isDate(this.obj, DateTimeFormatter.ofPattern(format))) {
-                    throw new AssertionError("Node is not a date of specified format: " + this.obj +  ", format: " + format);
+                if (!JsonDateAssertions.isDate(object, DateTimeFormatter.ofPattern(format))) {
+                    throw new AssertionError("Expected node to be a type of date of specified format: " + object +  ", format: " + format);
                 }
             }
         });
@@ -132,15 +132,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
 
     public void dateTimeType() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (JsonDateTimeAssertions.isDateTime(this.obj)) {
-                    throw new AssertionError("Node is a recognized date-time: " + this.obj);
+            final Object object = this.object();
+
+            if (negated) {
+                if (JsonDateTimeAssertions.isDateTime(object)) {
+                    throw new AssertionError("Expected node to not be a type of date-time: " + object);
                 }
             } else {
-                if (!JsonDateTimeAssertions.isDateTime(this.obj)) {
-                    throw new AssertionError("Node is not a recognized date-time: " + this.obj);
+                if (!JsonDateTimeAssertions.isDateTime(object)) {
+                    throw new AssertionError("Expected node to be a type of date-time: " + object);
                 }
             }
         });
@@ -149,16 +149,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
     public void dateTimeType(@NonNull String format) {
         assertCondition(() -> {
             final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+            final Object object = this.object();
 
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (JsonDateTimeAssertions.isDateTime(this.obj, formatter)) {
-                    throw new AssertionError("Node is a date-time of specified format: " + this.obj + ", format: " + format);
+            if (negated) {
+                if (JsonDateTimeAssertions.isDateTime(object, formatter)) {
+                    throw new AssertionError("Expected node to not be a type of date-time of specified format: " + object + ", format: " + format);
                 }
             } else {
-                if (!JsonDateTimeAssertions.isDateTime(this.obj, formatter)) {
-                    throw new AssertionError("Node is not a date-time of specified format: " + this.obj + ", format: " + format);
+                if (!JsonDateTimeAssertions.isDateTime(object, formatter)) {
+                    throw new AssertionError("Expected node to be a type of date-time of specified format: " + object + ", format: " + format);
                 }
             }
 
@@ -167,15 +166,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
 
     public void timeType() {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (JsonTimeAssertions.isTime(this.obj)) {
-                    throw new AssertionError("Node is a recognized time: " + this.obj);
+            final Object object = this.object();
+
+            if (negated) {
+                if (JsonTimeAssertions.isTime(object)) {
+                    throw new AssertionError("Expected node to not be a type of time: " + object);
                 }
             } else {
-                if (!JsonTimeAssertions.isTime(this.obj)) {
-                    throw new AssertionError("Node is not a recognized time: " + this.obj);
+                if (!JsonTimeAssertions.isTime(object)) {
+                    throw new AssertionError("Expected node to be a type of time: " + object);
                 }
             }
         });
@@ -184,32 +183,32 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
     public void timeType(@NonNull String format) {
         assertCondition(() -> {
             final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (negated) {
-                if (JsonTimeAssertions.isTime(this.obj, formatter)) {
-                    throw new AssertionError("Node is a time of specified format: " + this.obj + ", format: " + format);
+            final Object object = this.object();
+
+            if (negated) {
+                if (JsonTimeAssertions.isTime(object, formatter)) {
+                    throw new AssertionError("Expected node to not be a type of time of specified format: " + object + ", format: " + format);
                 }
             } else {
-                if (!JsonTimeAssertions.isTime(this.obj, formatter)) {
-                    throw new AssertionError("Node is not a time of specified format: " + this.obj + ", format: " + format);
+                if (!JsonTimeAssertions.isTime(object, formatter)) {
+                    throw new AssertionError("Expected node to be a type of time of specified format: " + object + ", format: " + format);
                 }
             }
         });
     }
 
     public class JsonStringAssertions {
-        private final @Nullable Object actual;
+        private final Object actual;
         private final JsonStringAssertor assertor = new JsonStringAssertor();
 
-        private JsonStringAssertions(@Nullable Object actual) {
+        private JsonStringAssertions(@NonNull Object actual) {
             this.actual = actual;
         }
 
         private String actualString() {
-            if (actual == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (!(obj instanceof String)) {
+            final Object object = object();
+
+            if (!(object instanceof String)) {
                 throw new AssertionError("Node is not a string.");
             } else {
                 return ((String) this.actual).trim();
@@ -332,17 +331,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
     }
 
     public class JsonNumberAssertions {
-        private final @Nullable Object actual;
+        private final Object actual;
         private final JsonNumberAssertor assertor = new JsonNumberAssertor();
 
-        private JsonNumberAssertions(@Nullable Object actual) {
+        private JsonNumberAssertions(@NonNull Object actual) {
             this.actual = actual;
         }
 
         private Number actualNumber() {
-            if (actual == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (!(actual instanceof Number)) {
+            if (!(actual instanceof Number)) {
                 throw new AssertionError("Node is not a number.");
             } else {
                 return (Number) actual;
@@ -411,17 +408,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
     }
 
     public class JsonBooleanAssertions {
-        private final @Nullable Object actual;
+        private final Object actual;
         private final JsonBooleanAssertor assertor = new JsonBooleanAssertor();
 
-        private JsonBooleanAssertions(@Nullable Object actual) {
+        private JsonBooleanAssertions(@NonNull Object actual) {
             this.actual = actual;
         }
 
         private boolean actualBoolean() {
-            if (actual == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (String.valueOf(actual).equals("true")) {
+            if (String.valueOf(actual).equals("true")) {
                 return true;
             } else if (String.valueOf(actual).equals("false")) {
                 return false;
@@ -625,9 +620,7 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
         }
 
         private LocalDate actualDate() {
-            if (actual == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (actual instanceof String && definedFormat != null) {
+            if (actual instanceof String && definedFormat != null) {
                 try {
                     return LocalDate.parse(String.valueOf(actual), definedFormat);
                 } catch (DateTimeParseException e) {
@@ -876,11 +869,6 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
         }
 
         private LocalDateTime actualDateTime() {
-            if (actual == null) {
-                throw new AssertionError("Node does not exist.");
-            }
-
-
             if (actual instanceof String && definedFormat != null) {
                 final String stringValue = String.valueOf(actual);
                 try {
@@ -958,15 +946,15 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
                 DateTimeFormatter.ofPattern("H:mm")         // 14:30
         };
 
-        private final @Nullable Object actual;
+        private final Object actual;
         private final @Nullable DateTimeFormatter definedFormat;
         private final JsonTimeAssertor assertor = new JsonTimeAssertor();
 
-        private JsonTimeAssertions(@Nullable Object actual) {
+        private JsonTimeAssertions(@NonNull Object actual) {
             this(actual, null);
         }
 
-        private JsonTimeAssertions(@Nullable Object actual, @Nullable DateTimeFormatter definedFormat) {
+        private JsonTimeAssertions(@NonNull Object actual, @Nullable DateTimeFormatter definedFormat) {
             this.actual = actual;
             this.definedFormat = definedFormat;
         }
@@ -1062,9 +1050,7 @@ public class JsonNodeBeAssertionMethods extends AssertionMethods {
         }
 
         private LocalTime actualTime() {
-            if (actual == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (actual instanceof String && definedFormat != null) {
+            if (actual instanceof String && definedFormat != null) {
                 final String stringValue = String.valueOf(actual);
                 try {
                     return LocalTime.parse(stringValue, definedFormat);

@@ -1,5 +1,6 @@
 package org.emw.assertion.json;
 
+import org.emw.assertion.exception.AssertionGroupError;
 import org.json.JSONObject;
 
 public class JsonNodeAssertion {
@@ -10,9 +11,17 @@ public class JsonNodeAssertion {
     }
 
     public void expect(JsonAssertionObjectAction action) {
-        JsonNode node = new JsonNode(new JSONObject(json));
+        final JsonAssertionGroup group = new JsonAssertionGroup();
 
-        action.withJsonNode(node);
+        try {
+            final JsonNode node = new JsonNode(group, new JSONObject(json));
+
+            action.withJsonNode(node);
+        } finally {
+            if (!group.throwables().isEmpty()) {
+                throw new AssertionGroupError("Json Assertion", group.throwables());
+            }
+        }
     }
 
     public interface JsonAssertionObjectAction {

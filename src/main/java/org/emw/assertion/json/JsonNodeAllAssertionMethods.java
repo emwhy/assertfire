@@ -9,14 +9,14 @@ public class JsonNodeAllAssertionMethods extends JsonNodeAssertionMethods {
     public final JsonNodeNotAssertionMethods not;
     public final JsonNodeCaseInsensitivelyAssertionMethods caseInsensitively;
 
-    protected JsonNodeAllAssertionMethods(@Nullable Object obj, boolean negated, boolean ignoreCase, List<String> excludedNodes) {
-        super(obj, negated, ignoreCase, excludedNodes);
-        this.not = new JsonNodeNotAssertionMethods(obj, !negated, ignoreCase, excludedNodes);
-        this.caseInsensitively = new JsonNodeCaseInsensitivelyAssertionMethods(obj, negated, true, excludedNodes);
+    protected JsonNodeAllAssertionMethods(@NonNull JsonAssertionGroup group, @Nullable Object obj, boolean negated, boolean ignoreCase, List<String> excludedNodes) {
+        super(group, obj, negated, ignoreCase, excludedNodes);
+        this.not = new JsonNodeNotAssertionMethods(group, obj, !negated, ignoreCase, excludedNodes);
+        this.caseInsensitively = new JsonNodeCaseInsensitivelyAssertionMethods(group, obj, negated, true, excludedNodes);
     }
 
     public JsonNodeAllAssertionMethods excluding(@NonNull String jsonPointer) {
-        this.excludedNodes.add(jsonPointer);
+        this.addExcludedNode(jsonPointer);
         return this;
     }
 }

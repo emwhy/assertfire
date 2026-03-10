@@ -10,14 +10,14 @@ public class JsonNodesNotAssertionMethods extends JsonNodesAssertionMethods {
     public final JsonNodesCaseInsensitivityOnlyAssertionMethods inAnyOrder;
     public final JsonNodesAnyOrderOnlyAssertionMethods caseInsensitively;
 
-    JsonNodesNotAssertionMethods(@Nullable JSONArray actual, boolean negated, boolean ignoreCase, boolean anyOrder, @NonNull List<String> excludedNodes) {
-        super(actual, negated, ignoreCase, anyOrder, excludedNodes);
-        this.inAnyOrder = new JsonNodesCaseInsensitivityOnlyAssertionMethods(actual, negated, ignoreCase, true, excludedNodes);
-        this.caseInsensitively = new JsonNodesAnyOrderOnlyAssertionMethods(actual, negated, true, anyOrder, excludedNodes);
+    JsonNodesNotAssertionMethods(@NonNull JsonAssertionGroup group, @Nullable JSONArray actual, boolean negated, boolean ignoreCase, boolean anyOrder, @NonNull List<String> excludedNodes) {
+        super(group, actual, negated, ignoreCase, anyOrder, excludedNodes);
+        this.inAnyOrder = new JsonNodesCaseInsensitivityOnlyAssertionMethods(group, actual, negated, ignoreCase, true, excludedNodes);
+        this.caseInsensitively = new JsonNodesAnyOrderOnlyAssertionMethods(group, actual, negated, true, anyOrder, excludedNodes);
     }
 
     public JsonNodesNotAssertionMethods excluding(@NonNull String jsonPointer) {
-        this.excludedNodes.add(jsonPointer);
+        this.addExcludedNode(jsonPointer);
         return this;
     }
 

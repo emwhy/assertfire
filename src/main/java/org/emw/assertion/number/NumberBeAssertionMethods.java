@@ -64,12 +64,13 @@ public final class NumberBeAssertionMethods extends AssertionMethods {
             final String message = helper.assertionErrorMessage("to be less than '" + expected + "'");
             if (actual == null) {
                 throw new AssertionError(message);
-            }
-            final boolean match = (actual instanceof Float || expected instanceof Float)
-                    ? actual.floatValue() < expected.floatValue()
-                    : actual.doubleValue() < expected.doubleValue();
-            if (match == negated) {
-                throw new AssertionError(message);
+            } else {
+                final boolean match = (actual instanceof Float || expected instanceof Float)
+                        ? actual.floatValue() < expected.floatValue()
+                        : actual.doubleValue() < expected.doubleValue();
+                if (match == negated) {
+                    throw new AssertionError(message);
+                }
             }
         });
     }
@@ -79,12 +80,13 @@ public final class NumberBeAssertionMethods extends AssertionMethods {
             final String message = helper.assertionErrorMessage("to be more than or equal '" + expected + "'");
             if (actual == null) {
                 throw new AssertionError(message);
-            }
-            final boolean match = (actual instanceof Float || expected instanceof Float)
-                    ? actual.floatValue() >= expected.floatValue()
-                    : actual.doubleValue() >= expected.doubleValue();
-            if (match == negated) {
-                throw new AssertionError(message);
+            } else {
+                final boolean match = (actual instanceof Float || expected instanceof Float)
+                        ? actual.floatValue() >= expected.floatValue()
+                        : actual.doubleValue() >= expected.doubleValue();
+                if (match == negated) {
+                    throw new AssertionError(message);
+                }
             }
         });
     }
@@ -94,12 +96,13 @@ public final class NumberBeAssertionMethods extends AssertionMethods {
             final String message = helper.assertionErrorMessage("to be less than or equal '" + expected + "'");
             if (actual == null) {
                 throw new AssertionError(message);
-            }
-            final boolean match = (actual instanceof Float || expected instanceof Float)
-                    ? actual.floatValue() <= expected.floatValue()
-                    : actual.doubleValue() <= expected.doubleValue();
-            if (match == negated) {
-                throw new AssertionError(message);
+            } else {
+                final boolean match = (actual instanceof Float || expected instanceof Float)
+                        ? actual.floatValue() <= expected.floatValue()
+                        : actual.doubleValue() <= expected.doubleValue();
+                if (match == negated) {
+                    throw new AssertionError(message);
+                }
             }
         });
     }
@@ -109,17 +112,18 @@ public final class NumberBeAssertionMethods extends AssertionMethods {
             final String message = helper.assertionErrorMessage("to be between '" + expectedLower + "' and '" + expectedUpper + "'");
             if (actual == null) {
                 throw new AssertionError(message);
-            }
-            boolean match;
-            if (actual instanceof Float || expectedLower instanceof Float || expectedUpper instanceof Float) {
-                final float val = actual.floatValue();
-                match = (val >= expectedLower.floatValue() && val <= expectedUpper.floatValue());
             } else {
-                final double val = actual.doubleValue();
-                match = (val >= expectedLower.doubleValue() && val <= expectedUpper.doubleValue());
-            }
-            if (match == negated) {
-                throw new AssertionError(message);
+                boolean match;
+                if (actual instanceof Float || expectedLower instanceof Float || expectedUpper instanceof Float) {
+                    final float val = actual.floatValue();
+                    match = (val >= expectedLower.floatValue() && val <= expectedUpper.floatValue());
+                } else {
+                    final double val = actual.doubleValue();
+                    match = (val >= expectedLower.doubleValue() && val <= expectedUpper.doubleValue());
+                }
+                if (match == negated) {
+                    throw new AssertionError(message);
+                }
             }
         });
     }

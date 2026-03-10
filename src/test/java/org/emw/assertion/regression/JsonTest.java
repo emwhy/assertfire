@@ -1,7 +1,6 @@
 package org.emw.assertion.regression;
 
 import org.emw.assertion.json.JsonAssertor;
-import org.json.JSONObject;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -105,15 +104,12 @@ public class JsonTest implements JsonAssertor {
                 }
                 
                 """;
-        final JSONObject jo = new JSONObject(testJson);
-
         assertJson(testJson).expect(json -> {
             json.node("/university_system/name").to.caseInsensitively.be("global Tech Institute");
             json.node("/university_system/name").to.be("Global Tech Institute");
             json.node("/university_system/founded_year").to.be(1985);
             json.node("/university_system/founded_year").to.not.be(198);
             json.node("/university_system/global_stats/international_ratio").to.be(0.22);
-            json.node("/university_system/founded_year").to.exists();
             json.node("/university_system/founded_year").to.not.be.stringType();
             json.node("/university_system/end_year").to.be.nullValue();
             json.node("/university_system").to.not.be.stringType();

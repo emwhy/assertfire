@@ -2,37 +2,26 @@ package org.emw.assertion.json;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.emw.assertion.AssertionMethods;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class JsonNodeAssertionMethods extends AssertionMethods {
+public class JsonNodeAssertionMethods extends JsonAssertionMethods {
     public final JsonNodeBeAssertionMethods be;
-    private final @Nullable Object obj;
-    private final boolean negated;
-    private final boolean ignoreCase;
-    protected final @NonNull List<String> excludedNodes = new ArrayList<>();
 
-    protected JsonNodeAssertionMethods(@Nullable Object obj, boolean negated, boolean ignoreCase, @NonNull List<String> excludedNodes) {
-        super(null, "", negated, ignoreCase);
-        this.obj = obj;
-        this.negated = negated;
-        this.ignoreCase = ignoreCase;
-        this.excludedNodes.addAll(excludedNodes);
-        this.be = new JsonNodeBeAssertionMethods(obj, negated, ignoreCase);
+    protected JsonNodeAssertionMethods(@NonNull JsonAssertionGroup group, @Nullable Object obj, boolean negated, boolean ignoreCase, @NonNull List<String> excludedNodes) {
+        super(group, obj, negated, ignoreCase, false, excludedNodes);
+        this.be = new JsonNodeBeAssertionMethods(group, obj, negated, ignoreCase);
     }
 
     public void be(@NonNull Object expected) {
         assertCondition(() -> {
             final Object expectedObject = expected instanceof String && JsonHelper.isJson((String) expected) ? new JSONObject((String) expected) : expected;
+            final Object object = this.object();
 
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (expectedObject instanceof JSONObject && this.obj instanceof JSONObject) {
-                final String errorMessage = JsonHelper.matchJson((JSONObject) this.obj, (JSONObject) expectedObject, this.excludedNodes, this.ignoreCase);
+            if (expectedObject instanceof JSONObject && object instanceof JSONObject) {
+                final String errorMessage = JsonHelper.matchJson((JSONObject) object, (JSONObject) expectedObject, this.excludedNodes(), this.ignoreCase);
 
                 if (negated) {
                     if (errorMessage.isEmpty()) {
@@ -44,27 +33,19 @@ public class JsonNodeAssertionMethods extends AssertionMethods {
                     }
                 }
             } else if (expectedObject instanceof Float) {
-                if ((Double.parseDouble(expectedObject.toString()) == ((Number) this.obj).doubleValue()) == negated) {
-                    throw new AssertionError(String.format("Expected value '%s' to%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), this.obj));
+                if ((Double.parseDouble(expectedObject.toString()) == ((Number) object).doubleValue()) == negated) {
+                    throw new AssertionError(String.format("Expected value '%s' to%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), object));
                 }
             } else if (expectedObject instanceof Number) {
-                if ((((Number) expectedObject).doubleValue() == ((Number) this.obj).doubleValue()) == negated) {
-                    throw new AssertionError(String.format("Expected value '%s' to%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), this.obj));
+                if ((((Number) expectedObject).doubleValue() == ((Number) object).doubleValue()) == negated) {
+                    throw new AssertionError(String.format("Expected value '%s' to%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), object));
                 }
             } else if (ignoreCase && expectedObject instanceof String) {
-                if (this.obj.toString().trim().equalsIgnoreCase(expectedObject.toString().trim()) == negated) {
-                    throw new AssertionError(String.format("Expected value '%s' to case-insensitively%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), this.obj));
+                if (object.toString().trim().equalsIgnoreCase(expectedObject.toString().trim()) == negated) {
+                    throw new AssertionError(String.format("Expected value '%s' to case-insensitively%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), object));
                 }
-            } else if (this.obj.toString().trim().equals(expectedObject.toString().trim()) == negated) {
-                throw new AssertionError(String.format("Expected value '%s' to%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), this.obj));
-            }
-        });
-    }
-
-    public void exists() {
-        assertCondition(() -> {
-            if ((this.obj == null) != negated) {
-                throw new AssertionError("Node does not exist.");
+            } else if (object.toString().trim().equals(expectedObject.toString().trim()) == negated) {
+                throw new AssertionError(String.format("Expected value '%s' to%s be actual value '%s'.", expectedObject, (negated ? " not" : ""), object));
             }
         });
     }
@@ -81,9 +62,9 @@ public class JsonNodeAssertionMethods extends AssertionMethods {
 
     public void containJson(@NonNull JSONObject containedJson) {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (JsonHelper.findJson(this.obj, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
+            final Object object = this.object();
+
+            if (JsonHelper.findJson(object, containedJson, this.excludedNodes(), this.ignoreCase) == negated) {
                 throw new AssertionError("Expected the actual Json data to contain the expected Json data.");
             }
         });
@@ -91,9 +72,9 @@ public class JsonNodeAssertionMethods extends AssertionMethods {
 
     public void containJson(@NonNull JSONArray containedJson) {
         assertCondition(() -> {
-            if (this.obj == null) {
-                throw new AssertionError("Node does not exist.");
-            } else if (JsonHelper.findJson(this.obj, containedJson, this.excludedNodes, this.ignoreCase) == negated) {
+            final Object object = this.object();
+
+            if (JsonHelper.findJson(object, containedJson, this.excludedNodes(), this.ignoreCase) == negated) {
                 throw new AssertionError("Expected the actual Json data to contain the expected Json data.");
             }
         });

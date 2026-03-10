@@ -9,13 +9,13 @@ import java.util.List;
 public class JsonNodesCaseInsensitivityOnlyAssertionMethods extends JsonNodesAssertionMethods {
     public final JsonNodesAssertionMethods caseInsensitively;
 
-    JsonNodesCaseInsensitivityOnlyAssertionMethods(@Nullable JSONArray actual, boolean negated, boolean ignoreCase, boolean anyOrder, @NonNull List<String> excludedNodes) {
-        super(actual, negated, ignoreCase, anyOrder,  excludedNodes);
-        this.caseInsensitively = new JsonNodesAssertionMethods(actual, negated, true, anyOrder,  excludedNodes);
+    JsonNodesCaseInsensitivityOnlyAssertionMethods(@NonNull JsonAssertionGroup group, @Nullable JSONArray actual, boolean negated, boolean ignoreCase, boolean anyOrder, @NonNull List<String> excludedNodes) {
+        super(group, actual, negated, ignoreCase, anyOrder,  excludedNodes);
+        this.caseInsensitively = new JsonNodesAssertionMethods(group, actual, negated, true, anyOrder,  excludedNodes);
     }
 
     public JsonNodesCaseInsensitivityOnlyAssertionMethods excluding(@NonNull String jsonPointer) {
-        this.excludedNodes.add(jsonPointer);
+        this.addExcludedNode(jsonPointer);
         return this;
     }
 

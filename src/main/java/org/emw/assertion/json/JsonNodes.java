@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class JsonNodes implements Iterable<JsonNode> {
+public class JsonNodes extends JsonAssertion implements Iterable<JsonNode> {
     public final JsonNodesAllAssertionMethods to;
     protected final @Nullable JSONArray jsonArray;
 
-    protected JsonNodes(@Nullable JSONArray jsonArray) {
+    protected JsonNodes(@NonNull JsonAssertionGroup group, @Nullable JSONArray jsonArray) {
+        super(group);
         this.jsonArray = jsonArray;
-        this.to = new JsonNodesAllAssertionMethods(jsonArray, false, false, false, List.of());
+        this.to = new JsonNodesAllAssertionMethods(this.group, jsonArray, false, false, false, List.of());
     }
 
     public JsonNode get(int index) {
@@ -39,7 +40,7 @@ public class JsonNodes implements Iterable<JsonNode> {
         if (this.jsonArray == null) {
             return Stream.empty();
         } else {
-            return StreamSupport.stream(jsonArray.spliterator(), false).map(JsonNode::new);
+            return StreamSupport.stream(jsonArray.spliterator(), false).map(node -> new JsonNode(this.group, node));
         }
     }
 }
