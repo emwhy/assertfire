@@ -95,6 +95,22 @@ public class TimeBeAssertionMethods extends AssertionMethods {
         });
     }
 
+
+    /**
+     * Assert that the actual time falls within a specified number of hours past the current time.
+     * @param hours the number of hours to check
+     */
+    public void withinHours(int hours) {
+        final LocalTime now = LocalTime.now();
+        final LocalTime targetDateTime = now.minusHours(hours);
+        assertCondition(() -> {
+            boolean isWithin = (actualLocalTime != null) && (actualLocalTime.equals(targetDateTime) || actualLocalTime.isBefore(targetDateTime)) && (actualLocalTime.isAfter(now) || actualLocalTime.equals(now));
+            if (actualLocalTime == null || isWithin == negated) {
+                throw new AssertionError(helper.assertionErrorMessage("to be within " + hours + " hours from '" +  now.format(TIME_FORMATTER) + "'"));
+            }
+        });
+    }
+
     /**
      * Assert that the actual time falls within a specified number of hours prior to the current time.
      * @param hours the number of hours to check

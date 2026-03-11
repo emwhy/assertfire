@@ -13,16 +13,24 @@ import java.util.List;
  * GroupAssertion and throw them as a single error.
  */
 public class AssertionGroupError extends AssertionError {
-    public final List<Throwable> errors;
+    private final List<Throwable> throwables;
 
-    public AssertionGroupError(@NonNull String groupName, @NonNull List<Throwable> errors) {
-        super(buildMessage(groupName, errors));
+    public AssertionGroupError(@NonNull String groupName, @NonNull List<Throwable> throwables) {
+        super(buildMessage(groupName, throwables));
 
-        this.errors = Collections.unmodifiableList(errors);
+        this.throwables = throwables;
     }
 
-    public AssertionGroupError(@NonNull List<Throwable> errors) {
-        this("", errors);
+    public AssertionGroupError(@NonNull List<Throwable> throwables) {
+        this("", throwables);
+    }
+
+    public List<String> getMessages() {
+        return throwables.stream().map(th -> th.getMessage() == null ? "" : th.getMessage()).toList();
+    }
+
+    public List<Throwable> throwables() {
+        return Collections.unmodifiableList(throwables);
     }
 
     private static String buildMessage(@NonNull String groupName, @NonNull List<Throwable> errors) {
@@ -45,7 +53,7 @@ public class AssertionGroupError extends AssertionError {
         final StringBuilder messageBuilder = new StringBuilder(super.getMessage() == null ? "" : super.getMessage());
         int i = 0;
 
-        for (Throwable error : errors) {
+        for (Throwable error : throwables) {
             final String message = error.getMessage() == null ? "" : error.getMessage();
 
             messageBuilder.append("\n\n\t");
@@ -76,7 +84,7 @@ public class AssertionGroupError extends AssertionError {
         int i = 0;
 
         // Get list of errors and add to the string builder.
-        for (Throwable error : errors) {
+        for (Throwable error : throwables) {
             stackTraceBuilder.append("\n\t");
             stackTraceBuilder.append(AnsiEscapeText.WhiteUnderlined.text("Error Stack #" + (i + 1) + ":"));
             for (StackTraceElement stackTraceElement : error.getStackTrace()) {

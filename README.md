@@ -205,11 +205,16 @@ In the assertion framework, we can simply exclude those specific nodes from asse
 
 ## Assertion Groups
 
-AssertionGroup allows grouping multiple assertions.
+Let's say you have 10 assertions. In that assertions, the first one fails. If that happens, 9 other assertions are not being executed. That's many tests to be skipped without validations until the first one is fixed.
 
-All assertions within a group are tested before throwing*AssertionGroupError**. If multiple assertion failed, all errors are returned in exception message.
+AssertionGroup address this issue by adding ability to group multiple assertions.
 
-This is useful when multiple values need to be checked within the same context. It can save you from executing your tests multiple times to find out all the errors may exist in a context.
+All assertions within a group are guaranteed to be tested, even if some of assertions fail. At the end of the group, all errors are bundled together into **AssertionGroupError**. 
+All error messages are displayed as a part of **AssertionGroupError**.
+
+This solves issue of subsequent assertions being skipped over for earlier failures.
+
+This is particularly useful when performing multiple assertions within a same context, like testing all content within a same web page.
 
 ```java
     // This would throw AssertionError on the first "expect". Until this is fixed, you have no idea

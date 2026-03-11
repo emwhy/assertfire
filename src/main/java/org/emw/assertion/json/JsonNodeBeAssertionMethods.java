@@ -1357,6 +1357,20 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         }
 
         /**
+         * Assert that the time node is within a specified number of hours from now.
+         * @param hours number of hours
+         */
+        public void withinHours(int hours) {
+            assertCondition(() -> {
+                if (negated) {
+                    assertor.expect("JsonNode Time", this.actualTime()).to.not.be.withinHours(hours);
+                } else {
+                    assertor.expect("JsonNode Time", this.actualTime()).to.be.withinHours(hours);
+                }
+            });
+        }
+
+        /**
          * Assert that the time node is within a specified number of past hours from now.
          * @param hours number of hours
          */

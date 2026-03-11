@@ -1,11 +1,15 @@
 package org.emw.assertion.regression;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.emw.assertion.AssertionGroup;
+import org.emw.assertion.exception.AssertionGroupError;
 import org.emw.assertion.json.JsonAssertor;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class JsonTest implements JsonAssertor {
     @Test
@@ -412,6 +416,12 @@ public class JsonTest implements JsonAssertor {
 
     @Test
     public void testJsonDateTime() {
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        final LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        final LocalDateTime hoursPastDateTime = now.minusHours(5);
+        final LocalDateTime daysPastDateTime = now.minusDays(15);
+        final LocalDateTime hoursFutureDateTime = now.plusHours(5);
+        final LocalDateTime daysFutureDateTime = now.plusDays(15);
         final String testJson = """
                 {
                   "datetime_formats": [
@@ -455,15 +465,98 @@ public class JsonTest implements JsonAssertor {
                       "pattern": "yyyy-MM-dd HH:mm:ss",
                       "example": "2026-03-09 13:24:45"
                     }
-                  ]
+                  ],
+                  "relative_datetime": {
+                    "hours_past": {
+                      "example": "%s"
+                    },
+                    "days_past": {
+                      "example": "%s"
+                    },
+                    "hours_future": {
+                      "example": "%s"
+                    },
+                    "days_future": {
+                      "example": "%s"
+                    }
+                  }
                 }
-                """;
+                """.formatted(hoursPastDateTime.format(dateTimeFormatter), daysPastDateTime.format(dateTimeFormatter), hoursFutureDateTime.format(dateTimeFormatter), daysFutureDateTime.format(dateTimeFormatter));
 
         assertJson(testJson).expect(json -> {
-            json.nodes("/datetime_formats").stream().forEach(node -> {
-                node.node("/example").to.be.dateTimeType();
-                node.node("/example").to.be.dateTime.sameOrAfter(LocalDateTime.of(2026, 3, 9, 13, 24, 45));
-                node.node("/example").to.be.dateTime.before(LocalDateTime.of(2026, 3, 9, 13, 25));
+            json.nodes("/datetime_formats").stream().forEach(dateFormatNode -> {
+                dateFormatNode.node("/example", exampleNode -> {
+                    exampleNode.to.be.dateTimeType();
+                    exampleNode.to.be.dateTime.sameOrAfter(LocalDateTime.of(2026, 3, 9, 13, 24, 45));
+                    exampleNode.to.be.dateTime.before(LocalDateTime.of(2026, 3, 9, 13, 25));
+                    exampleNode.to.be.dateTime.after(LocalDateTime.of(2026, 3, 8, 13, 25));
+                    exampleNode.to.be.dateTime.sameDateAs(LocalDate.of(2026, 3, 9));
+                });
+            });
+            json.node("/relative_datetime", relativeDateTimeNode -> {
+                relativeDateTimeNode.node("/hours_past/example", exampleNode -> {
+                    exampleNode.to.be.dateTimeType();
+                    exampleNode.to.be.stringType();
+                    exampleNode.to.be.dateTime.sameDateAs(hoursPastDateTime.toLocalDate());
+                    exampleNode.to.be.dateTime.of(hoursPastDateTime);
+                    exampleNode.to.be.dateTime.withinPastHours(6);
+                    exampleNode.to.not.be.dateTime.withinPastHours(4);
+                    exampleNode.to.be.dateTime.moreThanHoursInPast(4);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInPast(1);
+                    exampleNode.to.not.be.dateTime.withinPastHours(4);
+                    exampleNode.to.be.dateTime.withinPastDays(1);
+                    exampleNode.to.not.be.dateTime.withinHours(4);
+                    exampleNode.to.not.be.dateTime.moreThanHoursInFuture(4);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInFuture(1);
+                });
+                relativeDateTimeNode.node("/days_past/example", exampleNode -> {
+                    exampleNode.to.be.dateTimeType();
+                    exampleNode.to.be.stringType();
+                    exampleNode.to.be.dateTime.sameDateAs(daysPastDateTime.toLocalDate());
+                    exampleNode.to.be.dateTime.of(daysPastDateTime);
+                    exampleNode.to.not.be.dateTime.withinPastHours(6);
+                    exampleNode.to.be.dateTime.withinPastDays(16);
+                    exampleNode.to.not.be.dateTime.withinPastDays(14);
+                    exampleNode.to.be.dateTime.moreThanHoursInPast(4);
+                    exampleNode.to.be.dateTime.moreThanDaysInPast(14);
+                    exampleNode.to.not.be.dateTime.withinPastHours(4);
+                    exampleNode.to.not.be.dateTime.withinHours(4);
+                    exampleNode.to.not.be.dateTime.moreThanHoursInFuture(4);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInFuture(1);
+                });
+                relativeDateTimeNode.node("/hours_future/example", exampleNode -> {
+                    exampleNode.to.be.dateTimeType();
+                    exampleNode.to.be.stringType();
+                    exampleNode.to.be.dateTime.sameDateAs(hoursFutureDateTime.toLocalDate());
+                    exampleNode.to.be.dateTime.of(hoursFutureDateTime);
+                    exampleNode.to.not.be.dateTime.withinPastHours(6);
+                    exampleNode.to.be.dateTime.withinPastDays(16);
+                    exampleNode.to.be.dateTime.withinPastDays(14);
+                    exampleNode.to.not.be.dateTime.moreThanHoursInPast(4);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInPast(14);
+                    exampleNode.to.not.be.dateTime.withinPastHours(4);
+                    exampleNode.to.not.be.dateTime.withinHours(4);
+                    exampleNode.to.be.dateTime.withinHours(6);
+                    exampleNode.to.be.dateTime.moreThanHoursInFuture(4);
+                    exampleNode.to.not.be.dateTime.moreThanHoursInFuture(6);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInFuture(1);
+                });
+                relativeDateTimeNode.node("/days_future/example", exampleNode -> {
+                    exampleNode.to.be.dateTimeType();
+                    exampleNode.to.be.stringType();
+                    exampleNode.to.be.dateTime.sameDateAs(daysFutureDateTime.toLocalDate());
+                    exampleNode.to.be.dateTime.of(daysFutureDateTime);
+                    exampleNode.to.not.be.dateTime.withinPastHours(6);
+                    exampleNode.to.not.be.dateTime.withinPastDays(16);
+                    exampleNode.to.not.be.dateTime.withinPastDays(14);
+                    exampleNode.to.not.be.dateTime.moreThanHoursInPast(4);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInPast(14);
+                    exampleNode.to.not.be.dateTime.withinPastHours(4);
+                    exampleNode.to.not.be.dateTime.withinHours(4);
+                    exampleNode.to.be.dateTime.moreThanHoursInFuture(4);
+                    exampleNode.to.not.be.dateTime.moreThanDaysInFuture(16);
+                    exampleNode.to.be.dateTime.moreThanDaysInFuture(14);
+                });
             });
         });
 
@@ -471,6 +564,8 @@ public class JsonTest implements JsonAssertor {
 
     @Test
     public void testJsonTime() {
+        final LocalTime relativeTime = LocalTime.now().minusMinutes(30);
+        final String relativeTimeString = relativeTime.format(DateTimeFormatter.ofPattern("H:mm"));
         final String testJson = """
                 {
                   "time_formats": [
@@ -519,15 +614,83 @@ public class JsonTest implements JsonAssertor {
                       "pattern": "H:mm",
                       "example": "13:25"
                     }
-                  ]
+                  ],
+                  relative_time:
+                    {
+                      "formatter": "DateTimeFormatter.ofPattern(\\"H:mm\\")",
+                      "pattern": "H:mm",
+                      "example": "%s"
+                    }
                 }
-                """;
+                """.formatted(relativeTimeString);
         assertJson(testJson).expect(json -> {
-            json.nodes("/time_formats").stream().forEach(node -> {
-                node.node("/example").to.be.timeType();
-                node.node("/example").to.be.time.sameOrAfter(LocalTime.of(13, 25));
-                node.node("/example").to.be.time.before(LocalTime.of(13, 26));
+            json.nodes("/time_formats").forEach(timeFormatNode -> {
+                timeFormatNode.node("/example").to.be.stringType();
+                timeFormatNode.node("/example").to.be.timeType();
+                timeFormatNode.node("/example").to.be.time.sameOrAfter(LocalTime.of(13, 25));
+                timeFormatNode.node("/example").to.be.time.before(LocalTime.of(13, 26));
+            });
+            json.node("/relative_time/example", exampleNode -> {
+                exampleNode.to.be.stringType();
+                exampleNode.to.be.timeType();
+                exampleNode.to.be.time.before(LocalTime.now());
+                exampleNode.to.be.time.withinPastHours(1);
+                exampleNode.to.not.be.time.withinHours(1);
+                exampleNode.to.not.be.time.moreThanHoursInFuture(4);
+                exampleNode.to.not.be.time.moreThanHoursInPast(1);
             });
         });
+
+        expectError(() -> {
+            assertJson(testJson).expect(json -> {
+                json.nodes("/time_formats").forEach(timeFormatNode -> {
+                    timeFormatNode.node("/example").to.be.numberType();
+                    timeFormatNode.node("/example").to.not.be.stringType();
+                    timeFormatNode.node("/example").to.be.time.before(LocalTime.of(13, 25));
+                    timeFormatNode.node("/example").to.be.time.after(LocalTime.of(13, 26));
+                });
+            });
+        }, "Expected node to be a type of number.",
+                "Expected node to not be a type of string.",
+                "Expected actual value('13:25:30.000') of 'JsonNode Time' to be before ",
+                "Expected actual value('13:25:30.000') of 'JsonNode Time' to be after "
+                );
+
+        expectError(() -> {
+            assertJson(testJson).expect(json -> {
+                json.node("/relative_time/example", exampleNode -> {
+                    exampleNode.to.be.time.after(LocalTime.now());
+                    exampleNode.to.be.time.withinHours(1);
+                    exampleNode.to.be.time.moreThanHoursInFuture(4);
+                    exampleNode.to.be.time.moreThanHoursInPast(1);
+                });
+            });
+        }, "Expected actual value('%s:00.000') of 'JsonNode Time' to be after ".formatted(relativeTimeString),
+                "Expected actual value('%s:00.000') of 'JsonNode Time' to be within 1 hours from ".formatted(relativeTimeString),
+                "Expected actual value('%s:00.000') of 'JsonNode Time' to be more than 4 hours in future from ".formatted(relativeTimeString),
+                "Expected actual value('%s:00.000') of 'JsonNode Time' to be more than 1 hours in past from ".formatted(relativeTimeString));
+    }
+
+
+    private void expectError(@NonNull AssertionErrorAction action, @NonNull String... errorMessages) {
+        try {
+            action.expectAssertionError();
+        } catch (AssertionGroupError ex) {
+            if (errorMessages.length == 0) {
+                System.out.println("Error message: \n" + ex.getMessage());
+            } else {
+                for (String errorMessage : errorMessages) {
+                    if (ex.getMessage() == null || ex.getMessages().stream().noneMatch(s -> s.contains(errorMessage))) {
+                        throw new AssertionError("Unexpected AssertionError message. Expected: [" + errorMessage + "]\nActual: \n" + ex.getMessage());
+                    }
+                }
+            }
+            return;
+        }
+        throw new AssertionError("Expected AssertionError.");
+    }
+
+    interface AssertionErrorAction {
+        void expectAssertionError();
     }
 }
