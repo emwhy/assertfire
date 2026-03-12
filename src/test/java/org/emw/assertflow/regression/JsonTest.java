@@ -135,7 +135,7 @@ public class JsonTest implements JsonAssertor {
             json.node("/university_system/open").to.be.bool.trueValue();
             json.node("/university_system/global_stats/international_ratio").to.be(0.22);
             json.node("/university_system").to.excluding("/campuses", "/global_stats/total_students", "end_year").be("""
-                {
+                  {
                     "name": "Global Tech Institute",
                     "founded_year": 1985,
                     "open": true,
@@ -144,57 +144,57 @@ public class JsonTest implements JsonAssertor {
                       "international_ratio": 0.22,
                       "affiliations": ["Global Edu Group", "Research Alliance"]
                     }
-                }
+                  }
                 """);
             json.to.findJson("""
-                          {
-                            "access": "24/7",
-                            "type": "Library",
-                            "floors": [
-                              { "level": 1, "section": "Reference" },
-                              { "level": 2, "section": "Quiet Study" }
-                            ]
-                          }
-                    """);
+                  {
+                    "access": "24/7",
+                    "type": "Library",
+                    "floors": [
+                      { "level": 1, "section": "Reference" },
+                      { "level": 2, "section": "Quiet Study" }
+                    ]
+                  }
+                """);
             json.to.excluding("/access").findJson("""
-                          {
-                            "access": "24/7999",
-                            "type": "Library",
-                            "floors": [
-                              { "level": 1, "section": "Reference" },
-                              { "level": 2, "section": "Quiet Study" }
-                            ]
-                          }
-                    """);
+                  {
+                    "access": "24/7999",
+                    "type": "Library",
+                    "floors": [
+                      { "level": 1, "section": "Reference" },
+                      { "level": 2, "section": "Quiet Study" }
+                    ]
+                  }
+                """);
         });
     }
 
     @Test
     public void testJsonArray() {
         final String testJson = """
-                  [
-                    {
-                      "id": "ST-001",
-                      "name": "Alice Smith",
-                      "rooms": ["room1-1", "room1-2", "room1-3"],
-                      "numbers": [0.4, 4, 8],
-                      "grades": [
-                        { "exam": "Midterm", "score": 88 },
-                        { "exam": "Final", "score": 92 }
-                      ]
-                    },
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson",
-                      "rooms": ["room2-1", "room2-2", "room2-3"],
-                      "numbers": [4, 48, .8],
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
+              [
+                {
+                  "id": "ST-001",
+                  "name": "Alice Smith",
+                  "rooms": ["room1-1", "room1-2", "room1-3"],
+                  "numbers": [0.4, 4, 8],
+                  "grades": [
+                    { "exam": "Midterm", "score": 88 },
+                    { "exam": "Final", "score": 92 }
                   ]
-                """;
+                },
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson",
+                  "rooms": ["room2-1", "room2-2", "room2-3"],
+                  "numbers": [4, 48, .8],
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
+              ]
+            """;
         assertJsonArray(testJson).expect(jsonNodes -> {
             jsonNodes.first().node("/id").to.be.string.startWith("ST-001");
             jsonNodes.last().node("/id").to.be.string.startWith("ST-002");
@@ -220,115 +220,115 @@ public class JsonTest implements JsonAssertor {
                 ]
                 """);
             jsonNodes.to.excluding("/rooms", "/numbers").allMatch("""
-                    {
-                      "id": "ST-001",
-                      "name": "Alice Smith",
-                      "grades": [
-                        { "exam": "Midterm", "score": 88 },
-                        { "exam": "Final", "score": 92 }
-                      ]
-                    }
-                    """, """
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson",
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
+                {
+                  "id": "ST-001",
+                  "name": "Alice Smith",
+                  "grades": [
+                    { "exam": "Midterm", "score": 88 },
+                    { "exam": "Final", "score": 92 }
+                  ]
+                }
+                """, """
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson",
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
 
-                    """);
+                """);
             jsonNodes.first().nodes("/rooms").to.allMatch("room1-1", "room1-2", "room1-3");
             jsonNodes.first().nodes("/rooms").to.caseInsensitively.allMatch("ROOM1-1", "ROOM1-2", "ROOM1-3");
             jsonNodes.first().nodes("/rooms").to.inAnyOrder.allMatch("room1-2", "room1-3", "room1-1");
             jsonNodes.first().nodes("/numbers").to.allMatch(.4, 4, 8);
             jsonNodes.to.inAnyOrder.excluding("/rooms", "/numbers").allMatch("""
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson",
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
-                    """, """
-                    {
-                      "id": "ST-001",
-                      "name": "Alice Smith",
-                      "grades": [
-                        { "exam": "Midterm", "score": 88 },
-                        { "exam": "Final", "score": 92 }
-                      ]
-                    }
-                    """);
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson",
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
+                """, """
+                {
+                  "id": "ST-001",
+                  "name": "Alice Smith",
+                  "grades": [
+                    { "exam": "Midterm", "score": 88 },
+                    { "exam": "Final", "score": 92 }
+                  ]
+                }
+                """);
             jsonNodes.to.excluding("/rooms", "/numbers").not.allMatch("""
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson",
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
-                    """, """
-                    {
-                      "id": "ST-001",
-                      "name": "Alice Smith",
-                      "grades": [
-                        { "exam": "Midterm", "score": 88 },
-                        { "exam": "Final", "score": 92 }
-                      ]
-                    }
-                    """);
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson",
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
+                """, """
+                {
+                  "id": "ST-001",
+                  "name": "Alice Smith",
+                  "grades": [
+                    { "exam": "Midterm", "score": 88 },
+                    { "exam": "Final", "score": 92 }
+                  ]
+                }
+                """);
             jsonNodes.to.excluding("/rooms", "/numbers").contain("""
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson",
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
-                    """);
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson",
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
+                """);
             jsonNodes.to.excluding("/rooms", "/numbers").contain("""
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson",
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
-                    """, """
-                    {
-                      "id": "ST-001",
-                      "name": "Alice Smith",
-                      "grades": [
-                        { "exam": "Midterm", "score": 88 },
-                        { "exam": "Final", "score": 92 }
-                      ]
-                    }
-                    """);
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson",
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
+                """, """
+                {
+                  "id": "ST-001",
+                  "name": "Alice Smith",
+                  "grades": [
+                    { "exam": "Midterm", "score": 88 },
+                    { "exam": "Final", "score": 92 }
+                  ]
+                }
+                """);
             jsonNodes.to.excluding("/rooms", "/numbers").not.contain("""
-                    {
-                      "id": "ST-002",
-                      "name": "Bob Johnson Test",
-                      "grades": [
-                        { "exam": "Midterm", "score": 75 },
-                        { "exam": "Final", "score": 81 }
-                      ]
-                    }
-                    """, """
-                    {
-                      "id": "ST-001",
-                      "name": "Alice Smith",
-                      "grades": [
-                        { "exam": "Midterm", "score": 88 },
-                        { "exam": "Final", "score": 92 }
-                      ]
-                    }
-                    """);
+                {
+                  "id": "ST-002",
+                  "name": "Bob Johnson Test",
+                  "grades": [
+                    { "exam": "Midterm", "score": 75 },
+                    { "exam": "Final", "score": 81 }
+                  ]
+                }
+                """, """
+                {
+                  "id": "ST-001",
+                  "name": "Alice Smith",
+                  "grades": [
+                    { "exam": "Midterm", "score": 88 },
+                    { "exam": "Final", "score": 92 }
+                  ]
+                }
+                """);
             jsonNodes.first().nodes("/rooms").to.contain("room1-2", "room1-3");
             jsonNodes.to.be.sizeOf(2);
             jsonNodes.to.not.be.empty();
@@ -343,80 +343,80 @@ public class JsonTest implements JsonAssertor {
         final LocalDate daysPastDate = now.minusDays(15);
         final LocalDate daysFutureDate = now.plusDays(15);
         final String testJson = String.format("""
+            {
+              "date_formats": [
                 {
-                  "date_formats": [
-                    {
-                      "formatter": "DateTimeFormatter.BASIC_ISO_DATE",
-                      "pattern": "yyyyMMdd",
-                      "example": "20260309"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_DATE",
-                      "pattern": "yyyy-MM-dd+HH:mm",
-                      "example": "2026-03-09-04:00"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_OFFSET_DATE",
-                      "pattern": "yyyy-MM-dd+HH:mm",
-                      "example": "2026-03-09-04:00"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_LOCAL_DATE",
-                      "pattern": "yyyy-MM-dd",
-                      "example": "2026-03-09"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_ORDINAL_DATE",
-                      "pattern": "yyyy-DDD",
-                      "example": "2026-068"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_WEEK_DATE",
-                      "pattern": "YYYY-w-e",
-                      "example": "2026-W11-1"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)",
-                      "pattern": "EEEE, MMMM d, yyyy",
-                      "example": "Monday, March 9, 2026"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)",
-                      "pattern": "MMMM d, yyyy",
-                      "example": "March 9, 2026"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)",
-                      "pattern": "MMM d, yyyy",
-                      "example": "Mar 9, 2026"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)",
-                      "pattern": "M/d/yy",
-                      "example": "3/9/26"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"MM/dd/yyyy\\")",
-                      "pattern": "MM/dd/yyyy",
-                      "example": "03/09/2026"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"M/d/yyyy\\")",
-                      "pattern": "M/d/yyyy",
-                      "example": "3/9/2026"
-                    }
-                  ],
-                  "relative_date": {
-                    "days_past": {
-                      "example": "%s"
-                    },
-                    "days_future": {
-                      "example": "%s"
-                    }
-                  }
+                  "formatter": "DateTimeFormatter.BASIC_ISO_DATE",
+                  "pattern": "yyyyMMdd",
+                  "example": "20260309"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_DATE",
+                  "pattern": "yyyy-MM-dd+HH:mm",
+                  "example": "2026-03-09-04:00"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_OFFSET_DATE",
+                  "pattern": "yyyy-MM-dd+HH:mm",
+                  "example": "2026-03-09-04:00"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_LOCAL_DATE",
+                  "pattern": "yyyy-MM-dd",
+                  "example": "2026-03-09"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_ORDINAL_DATE",
+                  "pattern": "yyyy-DDD",
+                  "example": "2026-068"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_WEEK_DATE",
+                  "pattern": "YYYY-w-e",
+                  "example": "2026-W11-1"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)",
+                  "pattern": "EEEE, MMMM d, yyyy",
+                  "example": "Monday, March 9, 2026"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)",
+                  "pattern": "MMMM d, yyyy",
+                  "example": "March 9, 2026"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)",
+                  "pattern": "MMM d, yyyy",
+                  "example": "Mar 9, 2026"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)",
+                  "pattern": "M/d/yy",
+                  "example": "3/9/26"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"MM/dd/yyyy\\")",
+                  "pattern": "MM/dd/yyyy",
+                  "example": "03/09/2026"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"M/d/yyyy\\")",
+                  "pattern": "M/d/yyyy",
+                  "example": "3/9/2026"
                 }
-                
-                """, daysPastDate.format(dateTimeFormatter), daysFutureDate.format(dateTimeFormatter));
+              ],
+              "relative_date": {
+                "days_past": {
+                  "example": "%s"
+                },
+                "days_future": {
+                  "example": "%s"
+                }
+              }
+            }
+            
+            """, daysPastDate.format(dateTimeFormatter), daysFutureDate.format(dateTimeFormatter));
         assertJson(testJson).expect(json -> {
             json.nodes("/date_formats").forEach(node -> {
                 node.node("/example").to.be.dateType();
@@ -470,65 +470,65 @@ public class JsonTest implements JsonAssertor {
         final LocalDateTime hoursFutureDateTime = now.plusHours(5);
         final LocalDateTime daysFutureDateTime = now.plusDays(15);
         final String testJson = """
+            {
+              "datetime_formats": [
                 {
-                  "datetime_formats": [
-                    {
-                      "formatter": "DateTimeFormatter.ISO_LOCAL_DATE_TIME",
-                      "pattern": "yyyy-MM-dd'T'HH:mm:ss",
-                      "example": "2026-03-09T13:24:45"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_OFFSET_DATE_TIME",
-                      "pattern": "yyyy-MM-dd'T'HH:mm:ssXXX",
-                      "example": "2026-03-09T13:24:45-04:00"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_ZONED_DATE_TIME",
-                      "pattern": "yyyy-MM-dd'T'HH:mm:ssXXX'['VV']'",
-                      "example": "2026-03-09T13:24:45-04:00[America/New_York]"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_DATE_TIME",
-                      "pattern": "ISO-8601 with optional offset/zone",
-                      "example": "2026-03-09T13:24:45.123-04:00"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.RFC_1123_DATE_TIME",
-                      "pattern": "EEE, d MMM yyyy HH:mm:ss z",
-                      "example": "Mon, 9 Mar 2026 13:24:45 GMT"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"MM/dd/yyyy HH:mm:ss\\")",
-                      "pattern": "MM/dd/yyyy HH:mm:ss",
-                      "example": "03/09/2026 13:24:45"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"M/d/yyyy H:mm:ss\\")",
-                      "pattern": "M/d/yyyy H:mm:ss",
-                      "example": "3/9/2026 13:24:45"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"yyyy-MM-dd HH:mm:ss\\")",
-                      "pattern": "yyyy-MM-dd HH:mm:ss",
-                      "example": "2026-03-09 13:24:45"
-                    }
-                  ],
-                  "relative_datetime": {
-                    "hours_past": {
-                      "example": "%s"
-                    },
-                    "days_past": {
-                      "example": "%s"
-                    },
-                    "hours_future": {
-                      "example": "%s"
-                    },
-                    "days_future": {
-                      "example": "%s"
-                    }
-                  }
+                  "formatter": "DateTimeFormatter.ISO_LOCAL_DATE_TIME",
+                  "pattern": "yyyy-MM-dd'T'HH:mm:ss",
+                  "example": "2026-03-09T13:24:45"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_OFFSET_DATE_TIME",
+                  "pattern": "yyyy-MM-dd'T'HH:mm:ssXXX",
+                  "example": "2026-03-09T13:24:45-04:00"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_ZONED_DATE_TIME",
+                  "pattern": "yyyy-MM-dd'T'HH:mm:ssXXX'['VV']'",
+                  "example": "2026-03-09T13:24:45-04:00[America/New_York]"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_DATE_TIME",
+                  "pattern": "ISO-8601 with optional offset/zone",
+                  "example": "2026-03-09T13:24:45.123-04:00"
+                },
+                {
+                  "formatter": "DateTimeFormatter.RFC_1123_DATE_TIME",
+                  "pattern": "EEE, d MMM yyyy HH:mm:ss z",
+                  "example": "Mon, 9 Mar 2026 13:24:45 GMT"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"MM/dd/yyyy HH:mm:ss\\")",
+                  "pattern": "MM/dd/yyyy HH:mm:ss",
+                  "example": "03/09/2026 13:24:45"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"M/d/yyyy H:mm:ss\\")",
+                  "pattern": "M/d/yyyy H:mm:ss",
+                  "example": "3/9/2026 13:24:45"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"yyyy-MM-dd HH:mm:ss\\")",
+                  "pattern": "yyyy-MM-dd HH:mm:ss",
+                  "example": "2026-03-09 13:24:45"
                 }
-                """.formatted(hoursPastDateTime.format(dateTimeFormatter), daysPastDateTime.format(dateTimeFormatter), hoursFutureDateTime.format(dateTimeFormatter), daysFutureDateTime.format(dateTimeFormatter));
+              ],
+              "relative_datetime": {
+                "hours_past": {
+                  "example": "%s"
+                },
+                "days_past": {
+                  "example": "%s"
+                },
+                "hours_future": {
+                  "example": "%s"
+                },
+                "days_future": {
+                  "example": "%s"
+                }
+              }
+            }
+            """.formatted(hoursPastDateTime.format(dateTimeFormatter), daysPastDateTime.format(dateTimeFormatter), hoursFutureDateTime.format(dateTimeFormatter), daysFutureDateTime.format(dateTimeFormatter));
 
         assertJson(testJson).expect(json -> {
             json.nodes("/datetime_formats").stream().forEach(dateFormatNode -> {
@@ -614,62 +614,62 @@ public class JsonTest implements JsonAssertor {
         final LocalTime relativeTime = LocalTime.now().minusMinutes(30);
         final String relativeTimeString = relativeTime.format(DateTimeFormatter.ofPattern("H:mm"));
         final String testJson = """
+            {
+              "time_formats": [
                 {
-                  "time_formats": [
-                    {
-                      "formatter": "DateTimeFormatter.ISO_LOCAL_TIME",
-                      "pattern": "HH:mm:ss",
-                      "example": "13:25:30"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_TIME",
-                      "pattern": "HH:mm:ssXXX",
-                      "example": "13:25:30-04:00"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ISO_OFFSET_TIME",
-                      "pattern": "HH:mm:ssXXX",
-                      "example": "13:25:30-04:00"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"HH:mm:ss\\")",
-                      "pattern": "HH:mm:ss",
-                      "example": "13:25:30"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"HH:mm\\")",
-                      "pattern": "HH:mm",
-                      "example": "13:25"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"h:mm a\\")",
-                      "pattern": "h:mm a",
-                      "example": "1:25 PM"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"h:mm:ss a\\")",
-                      "pattern": "h:mm:ss a",
-                      "example": "1:25:30 PM"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"H:mm:ss\\")",
-                      "pattern": "H:mm:ss",
-                      "example": "13:25:30"
-                    },
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"H:mm\\")",
-                      "pattern": "H:mm",
-                      "example": "13:25"
-                    }
-                  ],
-                  relative_time:
-                    {
-                      "formatter": "DateTimeFormatter.ofPattern(\\"H:mm\\")",
-                      "pattern": "H:mm",
-                      "example": "%s"
-                    }
+                  "formatter": "DateTimeFormatter.ISO_LOCAL_TIME",
+                  "pattern": "HH:mm:ss",
+                  "example": "13:25:30"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_TIME",
+                  "pattern": "HH:mm:ssXXX",
+                  "example": "13:25:30-04:00"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ISO_OFFSET_TIME",
+                  "pattern": "HH:mm:ssXXX",
+                  "example": "13:25:30-04:00"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"HH:mm:ss\\")",
+                  "pattern": "HH:mm:ss",
+                  "example": "13:25:30"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"HH:mm\\")",
+                  "pattern": "HH:mm",
+                  "example": "13:25"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"h:mm a\\")",
+                  "pattern": "h:mm a",
+                  "example": "1:25 PM"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"h:mm:ss a\\")",
+                  "pattern": "h:mm:ss a",
+                  "example": "1:25:30 PM"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"H:mm:ss\\")",
+                  "pattern": "H:mm:ss",
+                  "example": "13:25:30"
+                },
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"H:mm\\")",
+                  "pattern": "H:mm",
+                  "example": "13:25"
                 }
-                """.formatted(relativeTimeString);
+              ],
+              relative_time:
+                {
+                  "formatter": "DateTimeFormatter.ofPattern(\\"H:mm\\")",
+                  "pattern": "H:mm",
+                  "example": "%s"
+                }
+            }
+            """.formatted(relativeTimeString);
         assertJson(testJson).expect(json -> {
             json.nodes("/time_formats").forEach(timeFormatNode -> {
                 timeFormatNode.node("/example").to.be.stringType();
