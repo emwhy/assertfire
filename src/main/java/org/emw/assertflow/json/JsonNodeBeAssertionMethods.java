@@ -952,9 +952,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void year(int year) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Year", this.actualDateTime()).to.not.be.year(year);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.year(year);
                 } else {
-                    assertor.expect("JsonNode Year", this.actualDateTime()).to.be.year(year);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.year(year);
                 }
             });
         }
@@ -966,9 +966,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void sameDateAs(@NonNull LocalDate expected) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.sameDateAs(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.sameDateAs(expected);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.sameDateAs(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.sameDateAs(expected);
                 }
             });
         }
@@ -980,9 +980,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void before(@NonNull LocalDateTime expected) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.before(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.before(expected);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.before(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.before(expected);
                 }
             });
         }
@@ -994,9 +994,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void after(@NonNull LocalDateTime expected) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.after(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.after(expected);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.after(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.after(expected);
                 }
             });
         }
@@ -1008,9 +1008,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void sameOrBefore(@NonNull LocalDateTime expected) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.sameOrBefore(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.sameOrBefore(expected);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.sameOrBefore(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.sameOrBefore(expected);
                 }
             });
         }
@@ -1022,9 +1022,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void sameOrAfter(@NonNull LocalDateTime expected) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.sameOrAfter(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.sameOrAfter(expected);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.sameOrAfter(expected);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.sameOrAfter(expected);
                 }
             });
         }
@@ -1051,9 +1051,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void withinDays(int days) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.withinDays(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.withinDays(days);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.withinDays(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.withinDays(days);
                 }
             });
         }
@@ -1065,9 +1065,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void withinPastDays(int days) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.withinPastDays(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.withinPastDays(days);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.withinPastDays(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.withinPastDays(days);
                 }
             });
         }
@@ -1079,9 +1079,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void moreThanDaysInFuture(int days) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.moreThanDaysInFuture(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.moreThanDaysInFuture(days);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.moreThanDaysInFuture(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.moreThanDaysInFuture(days);
                 }
             });
         }
@@ -1093,9 +1093,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void moreThanDaysInPast(int days) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.moreThanDaysInPast(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.moreThanDaysInPast(days);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.moreThanDaysInPast(days);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.moreThanDaysInPast(days);
                 }
             });
         }
@@ -1107,9 +1107,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void withinHours(int hours) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.withinHours(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.withinHours(hours);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.withinHours(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.withinHours(hours);
                 }
             });
         }
@@ -1121,9 +1121,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void withinPastHours(int hours) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.withinPastHours(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.withinPastHours(hours);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.withinPastHours(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.withinPastHours(hours);
                 }
             });
         }
@@ -1135,9 +1135,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void moreThanHoursInFuture(int hours) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.moreThanHoursInFuture(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.moreThanHoursInFuture(hours);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.moreThanHoursInFuture(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.moreThanHoursInFuture(hours);
                 }
             });
         }
@@ -1149,9 +1149,9 @@ public class JsonNodeBeAssertionMethods extends JsonAssertionMethods {
         public void moreThanHoursInPast(int hours) {
             assertCondition(() -> {
                 if (negated) {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.not.be.moreThanHoursInPast(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.not.be.moreThanHoursInPast(hours);
                 } else {
-                    assertor.expect("JsonNode Date", this.actualDateTime()).to.be.moreThanHoursInPast(hours);
+                    assertor.expect("JsonNode DateTime", this.actualDateTime()).to.be.moreThanHoursInPast(hours);
                 }
             });
         }

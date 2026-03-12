@@ -5,6 +5,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.emw.assertflow.AssertionGroup;
 import org.emw.assertflow.AssertionMethods;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -101,11 +103,14 @@ public class TimeBeAssertionMethods extends AssertionMethods {
      * @param hours the number of hours to check
      */
     public void withinHours(int hours) {
-        final LocalTime now = LocalTime.now();
-        final LocalTime targetDateTime = now.minusHours(hours);
+        final LocalDateTime now = LocalTime.now().atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime actualLocalDateTime = actualLocalTime == null ? null : actualLocalTime.atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime targetDateTime = now.plusHours(hours);
+
+        // Because the time wraps when adding hours, convert to date/time to get correct comparison.
         assertCondition(() -> {
-            boolean isWithin = (actualLocalTime != null) && (actualLocalTime.equals(targetDateTime) || actualLocalTime.isBefore(targetDateTime)) && (actualLocalTime.isAfter(now) || actualLocalTime.equals(now));
-            if (actualLocalTime == null || isWithin == negated) {
+            boolean isWithin = (actualLocalDateTime != null) && (actualLocalDateTime.isEqual(targetDateTime) || actualLocalDateTime.isBefore(targetDateTime)) && (actualLocalDateTime.isAfter(now) || actualLocalDateTime.isEqual(now));
+            if (actualLocalDateTime == null || isWithin == negated) {
                 throw new AssertionError(helper.assertionErrorMessage("to be within " + hours + " hours from '" +  now.format(TIME_FORMATTER) + "'"));
             }
         });
@@ -116,10 +121,14 @@ public class TimeBeAssertionMethods extends AssertionMethods {
      * @param hours the number of hours to check
      */
     public void withinPastHours(int hours) {
-        final LocalTime now = LocalTime.now();
-        final LocalTime targetDateTime = now.minusHours(hours);
+        final LocalDateTime now = LocalTime.now().atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime actualLocalDateTime = actualLocalTime == null ? null : actualLocalTime.atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime targetDateTime = now.minusHours(hours);
+
+        // Because the time wraps when adding hours, convert to date/time to get correct comparison.
         assertCondition(() -> {
-            boolean isWithin = (actualLocalTime != null) && (actualLocalTime.equals(targetDateTime) || actualLocalTime.isAfter(targetDateTime)) && (actualLocalTime.isBefore(now) || actualLocalTime.equals(now));
+            final boolean isWithin = (actualLocalDateTime != null) && (actualLocalDateTime.isEqual(targetDateTime) || actualLocalDateTime.isAfter(targetDateTime)) && (actualLocalDateTime.isBefore(now) || actualLocalDateTime.isEqual(now));
+
             if (actualLocalTime == null || isWithin == negated) {
                 throw new AssertionError(helper.assertionErrorMessage("to be within past " + hours + " hours from '" +  now.format(TIME_FORMATTER) + "'"));
             }
@@ -131,10 +140,13 @@ public class TimeBeAssertionMethods extends AssertionMethods {
      * @param hours the number of hours threshold
      */
     public void moreThanHoursInFuture(int hours) {
-        final LocalTime now = LocalTime.now();
-        final LocalTime targetDateTime = now.plusHours(hours);
+        final LocalDateTime now = LocalTime.now().atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime actualLocalDateTime = actualLocalTime == null ? null : actualLocalTime.atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime targetDateTime = now.plusHours(hours);
+
+        // Because the time wraps when adding hours, convert to date/time to get correct comparison.
         assertCondition(() -> {
-            if (actualLocalTime == null || actualLocalTime.isAfter(targetDateTime) == negated) {
+            if (actualLocalDateTime == null || actualLocalDateTime.isAfter(targetDateTime) == negated) {
                 throw new AssertionError(helper.assertionErrorMessage("to be more than " + hours + " hours in future from '" + now.format(TIME_FORMATTER) + "'"));
             }
         });
@@ -145,10 +157,13 @@ public class TimeBeAssertionMethods extends AssertionMethods {
      * @param hours the number of hours threshold
      */
     public void moreThanHoursInPast(int hours) {
-        final LocalTime now = LocalTime.now();
-        final LocalTime targetDateTime = now.minusHours(hours);
+        final LocalDateTime now = LocalTime.now().atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime actualLocalDateTime = actualLocalTime == null ? null : actualLocalTime.atDate(LocalDate.of(2000, 1, 1));
+        final LocalDateTime targetDateTime = now.minusHours(hours);
+
+        // Because the time wraps when adding hours, convert to date/time to get correct comparison.
         assertCondition(() -> {
-            if (actualLocalTime == null || actualLocalTime.isBefore(targetDateTime) == negated) {
+            if (actualLocalDateTime == null || actualLocalDateTime.isBefore(targetDateTime) == negated) {
                 throw new AssertionError(helper.assertionErrorMessage("to be more than " + hours + " hours in past from '" + now.format(TIME_FORMATTER) + "'"));
             }
         });

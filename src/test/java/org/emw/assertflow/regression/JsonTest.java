@@ -577,8 +577,6 @@ public class JsonTest implements JsonAssertor {
                     exampleNode.to.be.dateTime.sameDateAs(hoursFutureDateTime.toLocalDate());
                     exampleNode.to.be.dateTime.of(hoursFutureDateTime);
                     exampleNode.to.not.be.dateTime.withinPastHours(6);
-                    exampleNode.to.be.dateTime.withinPastDays(16);
-                    exampleNode.to.be.dateTime.withinPastDays(14);
                     exampleNode.to.not.be.dateTime.moreThanHoursInPast(4);
                     exampleNode.to.not.be.dateTime.moreThanDaysInPast(14);
                     exampleNode.to.not.be.dateTime.withinPastHours(4);
