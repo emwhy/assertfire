@@ -63,7 +63,7 @@ jobs:
         if: failure()
         with:
           name: build-reports
-          path: /home/runner/work/assertion/assertion/build/reports/
+          path: /home/runner/work/assertflow/assertflow/build/reports/
 
       - name: Upload Javadoc JAR asset
         uses: actions/upload-release-asset@v1

@@ -672,10 +672,12 @@ public class JsonTest implements JsonAssertor {
             """.formatted(relativeTimeString);
         assertJson(testJson).expect(json -> {
             json.nodes("/time_formats").forEach(timeFormatNode -> {
-                timeFormatNode.node("/example").to.be.stringType();
-                timeFormatNode.node("/example").to.be.timeType();
-                timeFormatNode.node("/example").to.be.time.sameOrAfter(LocalTime.of(13, 25));
-                timeFormatNode.node("/example").to.be.time.before(LocalTime.of(13, 26));
+                timeFormatNode.node("/example", exampleNode -> {
+                    exampleNode.to.be.stringType();
+                    exampleNode.to.be.timeType();
+                    exampleNode.to.be.time.sameOrAfter(LocalTime.of(13, 25));
+                    exampleNode.to.be.time.before(LocalTime.of(13, 26));
+                });
             });
             json.node("/relative_time/example", exampleNode -> {
                 exampleNode.to.be.stringType();
